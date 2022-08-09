@@ -1,22 +1,43 @@
+import _ from 'lodash';
 import React from 'react';
 
-export type MjUnit<Suffix extends string> = `${number}${Suffix}`;
+type MjUnitBase<Suffix extends string> = `${number}${Suffix}` | '0';
+export type MjUnit<Suffix extends string> =
+  | `${MjUnitBase<Suffix>}`
+  | `${MjUnitBase<Suffix>} ${MjUnitBase<Suffix>}`
+  | `${MjUnitBase<Suffix>} ${MjUnitBase<Suffix>} ${MjUnitBase<Suffix>}`
+  | `${MjUnitBase<Suffix>} ${MjUnitBase<Suffix>} ${MjUnitBase<Suffix>} ${MjUnitBase<Suffix>}`;
 
 export type MjmlBaseProps = {
   /** class name, added to the root HTML element created */
   className?: string;
   /** class name, added to the root HTML element created */
-  'css-class'?: string;
+  cssClass?: string;
   children?: React.ReactNode;
 };
 
 export type MjmlComponent<Props> = React.FC<Props & MjmlBaseProps>;
 
-function createComponent<Props>(Name: string): MjmlComponent<Props> {
-  const Component: MjmlComponent<Props> = ({ className, 'css-class': cssClass, children, ...rest }) => {
+type KebabCase<T extends string, A extends string = ''> = T extends `${infer F}${infer R}`
+  ? KebabCase<R, `${A}${F extends Lowercase<F> ? '' : '-'}${Lowercase<F>}`>
+  : A;
+
+type KebabCaseKeys<T> = { [K in keyof T as K extends string ? KebabCase<K> : K]: T[K] };
+
+function handleMjmlProps<T extends Record<string, unknown>>(props: T): KebabCaseKeys<T> {
+  let converted: Record<string, unknown> = {};
+  for (let [key, value] of Object.entries(props)) {
+    converted[_.kebabCase(key)] = value;
+  }
+  return converted as KebabCaseKeys<T>;
+}
+
+function createComponent<Props extends Record<string, unknown>>(Name: string): MjmlComponent<Props> {
+  const Component: MjmlComponent<Props> = ({ className, cssClass, children, ...rest }) => {
+    let props = handleMjmlProps(rest);
     return (
       // @ts-expect-error
-      <Name {...rest} css-class={cssClass ?? className}>
+      <Name {...props} css-class={cssClass ?? className}>
         {children}
       </Name>
     );
@@ -30,7 +51,7 @@ export type MjBodyProps = {
   /** email's width */
   width?: MjUnit<'px'>;
   /** the general background color */
-  'background-color'?: string;
+  backgroundColor?: string;
 };
 
 /**
@@ -133,36 +154,36 @@ export type MjHeroProps = {
   /** hero section height (required for fixed-height mode) */
   height?: MjUnit<'px' | '%'>;
   /** absolute background url */
-  'background-url'?: string;
+  backgroundUrl?: string;
   /** width of the image used, mandatory */
-  'background-width'?: MjUnit<'px' | '%'>;
+  backgroundWidth?: MjUnit<'px' | '%'>;
   /** height of the image used, mandatory */
-  'background-height'?: MjUnit<'px' | '%'>;
+  backgroundHeight?: MjUnit<'px' | '%'>;
   /** background image position */
-  'background-position'?: string;
+  backgroundPosition?: string;
   /** border radius */
-  'border-radius'?: string;
-  'container-background-color'?: string;
-  'inner-background-color'?: string;
-  'inner-padding'?: MjUnit<'px' | '%'>;
-  'inner-padding-top'?: MjUnit<'px' | '%'>;
-  'inner-padding-left'?: MjUnit<'px' | '%'>;
-  'inner-padding-right'?: MjUnit<'px' | '%'>;
-  'inner-padding-bottom'?: MjUnit<'px' | '%'>;
+  borderRadius?: string;
+  containerBackgroundColor?: string;
+  innerBackgroundColor?: string;
+  innerPadding?: MjUnit<'px' | '%'>;
+  innerPaddingTop?: MjUnit<'px' | '%'>;
+  innerPaddingLeft?: MjUnit<'px' | '%'>;
+  innerPaddingRight?: MjUnit<'px' | '%'>;
+  innerPaddingBottom?: MjUnit<'px' | '%'>;
   /** supports up to 4 parameters */
   padding?: MjUnit<'px' | '%'>;
   /** bottom offset */
-  'padding-bottom'?: MjUnit<'px' | '%'>;
+  paddingBottom?: MjUnit<'px' | '%'>;
   /** left offset */
-  'padding-left'?: MjUnit<'px' | '%'>;
+  paddingLeft?: MjUnit<'px' | '%'>;
   /** right offset */
-  'padding-right'?: MjUnit<'px' | '%'>;
+  paddingRight?: MjUnit<'px' | '%'>;
   /** top offset */
-  'padding-top'?: MjUnit<'px' | '%'>;
+  paddingTop?: MjUnit<'px' | '%'>;
   /** hero background color */
-  'background-color'?: string;
+  backgroundColor?: string;
   /** content vertical alignment */
-  'vertical-align'?: 'top' | 'bottom' | 'middle';
+  verticalAlign?: 'top' | 'bottom' | 'middle';
 };
 
 /**
@@ -177,31 +198,31 @@ export type MjButtonProps = {
   /** horizontal alignment */
   align?: 'left' | 'center' | 'right';
   /** button background-color */
-  'background-color'?: string;
+  backgroundColor?: string;
   /** css border format */
-  'border-bottom'?: string;
+  borderBottom?: string;
   /** css border format */
-  'border-left'?: string;
+  borderLeft?: string;
   /** border radius */
-  'border-radius'?: string;
+  borderRadius?: string;
   /** css border format */
-  'border-right'?: string;
+  borderRight?: string;
   /** css border format */
-  'border-top'?: string;
+  borderTop?: string;
   /** css border format */
   border?: string;
   /** text color */
   color?: string;
   /** button container background color */
-  'container-background-color'?: string;
+  containerBackgroundColor?: string;
   /** font name */
-  'font-family'?: string;
+  fontFamily?: string;
   /** text size */
-  'font-size'?: MjUnit<'px'>;
+  fontSize?: MjUnit<'px'>;
   /** normal/italic/oblique */
-  'font-style'?: string;
+  fontStyle?: string;
   /** text thickness */
-  'font-weight'?: string;
+  fontWeight?: string;
   /** button height */
   height?: MjUnit<'px' | '%'>;
   /** link to be triggered when the button is clicked */
@@ -210,19 +231,19 @@ export type MjButtonProps = {
   /** tooltip & accessibility */
   title?: string;
   /** inner button padding */
-  'inner-padding'?: MjUnit<'px' | '%'>;
+  innerPadding?: MjUnit<'px' | '%'>;
   /** letter-spacing */
-  'letter-spacing'?: MjUnit<'px' | 'em'>;
+  letterSpacing?: MjUnit<'px' | 'em'>;
   /** line-height on link */
-  'line-height'?: MjUnit<'px' | '%' | ''>;
+  lineHeight?: MjUnit<'px' | '%' | ''>;
   /** bottom offset */
-  'padding-bottom'?: MjUnit<'px' | '%'>;
+  paddingBottom?: MjUnit<'px' | '%'>;
   /** left offset */
-  'padding-left'?: MjUnit<'px' | '%'>;
+  paddingLeft?: MjUnit<'px' | '%'>;
   /** right offset */
-  'padding-right'?: MjUnit<'px' | '%'>;
+  paddingRight?: MjUnit<'px' | '%'>;
   /** top offset */
-  'padding-top'?: MjUnit<'px' | '%'>;
+  paddingTop?: MjUnit<'px' | '%'>;
   /** supports up to 4 parameters */
   padding?: MjUnit<'px' | '%'>;
   /** specify the rel attribute for the button link */
@@ -230,13 +251,13 @@ export type MjButtonProps = {
   /** specify the target attribute for the button link */
   target?: string;
   /** underline/overline/none */
-  'text-decoration'?: string;
+  textDecoration?: string;
   /** capitalize/uppercase/lowercase */
-  'text-transform'?: string;
+  textTransform?: string;
   /** vertical alignment */
-  'vertical-align'?: 'top' | 'bottom' | 'middle';
+  verticalAlign?: 'top' | 'bottom' | 'middle';
   /** text-align button content */
-  'text-align'?: 'left' | 'right' | 'center';
+  textAlign?: 'left' | 'right' | 'center';
   /** button width */
   width?: MjUnit<'px' | '%'>;
 };
@@ -250,46 +271,46 @@ export let MjButton = createComponent<MjButtonProps>('mj-button');
 
 export type MjColumnProps = {
   /** background color for a column */
-  'background-color'?: string;
+  backgroundColor?: string;
   /** css border format */
   border?: string;
   /** css border format */
-  'border-bottom'?: string;
+  borderBottom?: string;
   /** css border format */
-  'border-left'?: string;
+  borderLeft?: string;
   /** border radius */
-  'border-radius'?: MjUnit<'px' | '%'>;
+  borderRadius?: MjUnit<'px' | '%'>;
   /** css border format */
-  'border-right'?: string;
+  borderRight?: string;
   /** css border format */
-  'border-top'?: string;
+  borderTop?: string;
   direction?: 'ltr' | 'rtl';
   /** requires: a padding, inner background color for column */
-  'inner-background-color'?: string;
+  innerBackgroundColor?: string;
   /** section bottom offset */
-  'padding-bottom'?: MjUnit<'px' | '%'>;
+  paddingBottom?: MjUnit<'px' | '%'>;
   /** section left offset */
-  'padding-left'?: MjUnit<'px' | '%'>;
+  paddingLeft?: MjUnit<'px' | '%'>;
   /** section right offset */
-  'padding-right'?: MjUnit<'px' | '%'>;
+  paddingRight?: MjUnit<'px' | '%'>;
   /** section top offset */
-  'padding-top'?: MjUnit<'px' | '%'>;
+  paddingTop?: MjUnit<'px' | '%'>;
   /** css border format */
-  'inner-border'?: string;
+  innerBorder?: string;
   /** css border format ; requires a padding */
-  'inner-border-bottom'?: string;
+  innerBorderBottom?: string;
   /** css border format ; requires a padding */
-  'inner-border-left'?: string;
+  innerBorderLeft?: string;
   /** border radius ; requires a padding */
-  'inner-border-radius'?: MjUnit<'px' | '%'>;
+  innerBorderRadius?: MjUnit<'px' | '%'>;
   /** css border format ; requires a padding */
-  'inner-border-right'?: string;
+  innerBorderRight?: string;
   /** css border format ; requires a padding */
-  'inner-border-top'?: string;
+  innerBorderTop?: string;
   /** supports up to 4 parameters */
   padding?: MjUnit<'px' | '%'>;
   /** middle/top/bottom (note: middle works only when adjacent mj-column is also set to middle) */
-  'vertical-align'?: 'top' | 'bottom' | 'middle';
+  verticalAlign?: 'top' | 'bottom' | 'middle';
   /** column width */
   width?: MjUnit<'px' | '%'>;
 };
@@ -304,23 +325,23 @@ export let MjColumn = createComponent<MjColumnProps>('mj-column');
 
 export type MjDividerProps = {
   /** divider color */
-  'border-color'?: string;
+  borderColor?: string;
   /** dashed/dotted/solid */
-  'border-style'?: string;
+  borderStyle?: string;
   /** divider's border width */
-  'border-width'?: MjUnit<'px'>;
+  borderWidth?: MjUnit<'px'>;
   /** inner element background color */
-  'container-background-color'?: string;
+  containerBackgroundColor?: string;
   /** supports up to 4 parameters */
   padding?: MjUnit<'px' | '%'>;
   /** bottom offset */
-  'padding-bottom'?: MjUnit<'px' | '%'>;
+  paddingBottom?: MjUnit<'px' | '%'>;
   /** left offset */
-  'padding-left'?: MjUnit<'px' | '%'>;
+  paddingLeft?: MjUnit<'px' | '%'>;
   /** right offset */
-  'padding-right'?: MjUnit<'px' | '%'>;
+  paddingRight?: MjUnit<'px' | '%'>;
   /** top offset */
-  'padding-top'?: MjUnit<'px' | '%'>;
+  paddingTop?: MjUnit<'px' | '%'>;
   /** divider width */
   width?: MjUnit<'px' | '%'>;
   /** alignment */
@@ -336,11 +357,11 @@ export let MjDivider = createComponent<MjDividerProps>('mj-divider');
 
 export type MjGroupProps = {
   /** background color for a group */
-  'background-color'?: string;
+  backgroundColor?: string;
   /** set the display order of direct children */
   direction?: 'ltr' | 'rtl';
   /** middle/top/bottom */
-  'vertical-align'?: 'top' | 'bottom' | 'middle';
+  verticalAlign?: 'top' | 'bottom' | 'middle';
   /** group width */
   width?: MjUnit<'px' | '%'>;
 };
@@ -374,37 +395,37 @@ export type MjImageProps = {
   /** css border definition */
   border?: string;
   /** css border definition */
-  'border-bottom'?: string;
+  borderBottom?: string;
   /** css border definition */
-  'border-left'?: string;
+  borderLeft?: string;
   /** css border definition */
-  'border-right'?: string;
+  borderRight?: string;
   /** css border definition */
-  'border-top'?: string;
+  borderTop?: string;
   /** border radius */
-  'border-radius'?: MjUnit<'px' | '%'>;
+  borderRadius?: MjUnit<'px' | '%'>;
   /** inner element background color */
-  'container-background-color'?: string;
+  containerBackgroundColor?: string;
   /** if "true", will be full width on mobile even if width is set */
-  'fluid-on-mobile'?: boolean;
+  fluidOnMobile?: boolean;
   /** supports up to 4 parameters */
   padding?: MjUnit<'px' | '%'>;
   /** bottom offset */
-  'padding-bottom'?: MjUnit<'px' | '%'>;
+  paddingBottom?: MjUnit<'px' | '%'>;
   /** left offset */
-  'padding-left'?: MjUnit<'px' | '%'>;
+  paddingLeft?: MjUnit<'px' | '%'>;
   /** right offset */
-  'padding-right'?: MjUnit<'px' | '%'>;
+  paddingRight?: MjUnit<'px' | '%'>;
   /** top offset */
-  'padding-top'?: MjUnit<'px' | '%'>;
+  paddingTop?: MjUnit<'px' | '%'>;
   /** link target on click */
   target?: string;
   /** image width */
   width?: MjUnit<'px'>;
   /** image height */
   height?: MjUnit<'px' | 'auto'>;
-  'max-height'?: MjUnit<'px' | '%'>;
-  'font-size'?: MjUnit<'px'>;
+  maxHeight?: MjUnit<'px' | '%'>;
+  fontSize?: MjUnit<'px'>;
   /** reference to image map, be careful, it isn't supported everywhere */
   usemap?: string;
 };
@@ -430,48 +451,48 @@ export let MjRaw = createComponent<MjRawProps>('mj-raw');
 
 export type MjSectionProps = {
   /** section color */
-  'background-color'?: string;
+  backgroundColor?: string;
   /** background url */
-  'background-url'?: string;
+  backgroundUrl?: string;
   /** css background repeat */
-  'background-repeat'?: 'repeat' | 'no-repeat';
+  backgroundRepeat?: 'repeat' | 'no-repeat';
   /** css background size */
-  'background-size'?: string;
+  backgroundSize?: string;
   /** css background position (see outlook limitations below) */
-  'background-position'?: string;
+  backgroundPosition?: string;
   /** css background position x */
-  'background-position-x'?: string;
+  backgroundPositionX?: string;
   /** css background position y */
-  'background-position-y'?: string;
+  backgroundPositionY?: string;
   /** css border format */
   border?: string;
   /** css border format */
-  'border-bottom'?: string;
+  borderBottom?: string;
   /** css border format */
-  'border-left'?: string;
+  borderLeft?: string;
   /** border radius */
-  'border-radius'?: string;
+  borderRadius?: string;
   /** css border format */
-  'border-right'?: string;
+  borderRight?: string;
   /** css border format */
-  'border-top'?: string;
+  borderTop?: string;
   /** set the display order of direct children */
   direction?: 'ltr' | 'rtl';
   /** make the section full-width */
-  'full-width'?: 'full-width' | 'false' | '';
+  fullWidth?: 'full-width' | 'false' | '';
   /** supports up to 4 parameters */
   padding?: MjUnit<'px' | '%'>;
   /** section top offset */
-  'padding-top'?: MjUnit<'px' | '%'>;
+  paddingTop?: MjUnit<'px' | '%'>;
   /** section bottom offset */
-  'padding-bottom'?: MjUnit<'px' | '%'>;
+  paddingBottom?: MjUnit<'px' | '%'>;
   /** section left offset */
-  'padding-left'?: MjUnit<'px' | '%'>;
+  paddingLeft?: MjUnit<'px' | '%'>;
   /** section right offset */
-  'padding-right'?: MjUnit<'px' | '%'>;
+  paddingRight?: MjUnit<'px' | '%'>;
   /** css text-align */
-  'text-align'?: 'left' | 'center' | 'right';
-  'text-padding'?: MjUnit<'px' | '%'>;
+  textAlign?: 'left' | 'center' | 'right';
+  textPadding?: MjUnit<'px' | '%'>;
 };
 
 /**
@@ -484,20 +505,20 @@ export let MjSection = createComponent<MjSectionProps>('mj-section');
 
 export type MjSpacerProps = {
   border?: string;
-  'border-bottom'?: string;
-  'border-left'?: string;
-  'border-right'?: string;
-  'border-top'?: string;
+  borderBottom?: string;
+  borderLeft?: string;
+  borderRight?: string;
+  borderTop?: string;
   /** inner element background color */
-  'container-background-color'?: string;
+  containerBackgroundColor?: string;
   /** bottom offset */
-  'padding-bottom'?: MjUnit<'px' | '%'>;
+  paddingBottom?: MjUnit<'px' | '%'>;
   /** left offset */
-  'padding-left'?: MjUnit<'px' | '%'>;
+  paddingLeft?: MjUnit<'px' | '%'>;
   /** right offset */
-  'padding-right'?: MjUnit<'px' | '%'>;
+  paddingRight?: MjUnit<'px' | '%'>;
   /** top offset */
-  'padding-top'?: MjUnit<'px' | '%'>;
+  paddingTop?: MjUnit<'px' | '%'>;
   /** supports up to 4 parameters */
   padding?: MjUnit<'px' | '%'>;
   /** spacer height */
@@ -514,40 +535,40 @@ export let MjSpacer = createComponent<MjSpacerProps>('mj-spacer');
 export type MjTextProps = {
   /** left/right/center/justify */
   align?: 'left' | 'right' | 'center' | 'justify';
-  'background-color'?: string;
+  backgroundColor?: string;
   /** text color */
   color?: string;
   /** inner element background color */
-  'container-background-color'?: string;
+  containerBackgroundColor?: string;
   /** font */
-  'font-family'?: string;
+  fontFamily?: string;
   /** text size */
-  'font-size'?: MjUnit<'px'>;
+  fontSize?: MjUnit<'px'>;
   /** normal/italic/oblique */
-  'font-style'?: string;
+  fontStyle?: string;
   /** text thickness */
-  'font-weight'?: string;
+  fontWeight?: string;
   /** The height of the element */
   height?: MjUnit<'px' | '%'>;
   /** letter spacing */
-  'letter-spacing'?: MjUnit<'px' | 'em'>;
+  letterSpacing?: MjUnit<'px' | 'em'>;
   /** space between the lines */
-  'line-height'?: MjUnit<'px' | '%' | ''>;
+  lineHeight?: MjUnit<'px' | '%' | ''>;
   /** bottom offset */
-  'padding-bottom'?: MjUnit<'px' | '%'>;
+  paddingBottom?: MjUnit<'px' | '%'>;
   /** left offset */
-  'padding-left'?: MjUnit<'px' | '%'>;
+  paddingLeft?: MjUnit<'px' | '%'>;
   /** right offset */
-  'padding-right'?: MjUnit<'px' | '%'>;
+  paddingRight?: MjUnit<'px' | '%'>;
   /** top offset */
-  'padding-top'?: MjUnit<'px' | '%'>;
+  paddingTop?: MjUnit<'px' | '%'>;
   /** supports up to 4 parameters */
   padding?: MjUnit<'px' | '%'>;
   /** underline/overline/line-through/none */
-  'text-decoration'?: string;
+  textDecoration?: string;
   /** uppercase/lowercase/capitalize */
-  'text-transform'?: string;
-  'vertical-align'?: 'top' | 'bottom' | 'middle';
+  textTransform?: string;
+  verticalAlign?: 'top' | 'bottom' | 'middle';
 };
 
 /**
@@ -567,31 +588,31 @@ export type MjTableProps = {
   /** space between cell and border */
   cellspacing?: number;
   /** inner element background color */
-  'container-background-color'?: string;
+  containerBackgroundColor?: string;
   /** text header & footer color */
   color?: string;
   /** font name */
-  'font-family'?: string;
+  fontFamily?: string;
   /** font size */
-  'font-size'?: MjUnit<'px'>;
-  'font-weight'?: string;
+  fontSize?: MjUnit<'px'>;
+  fontWeight?: string;
   /** space between lines */
-  'line-height'?: MjUnit<'px' | '%' | ''>;
+  lineHeight?: MjUnit<'px' | '%' | ''>;
   /** bottom offset */
-  'padding-bottom'?: MjUnit<'px' | '%'>;
+  paddingBottom?: MjUnit<'px' | '%'>;
   /** left offset */
-  'padding-left'?: MjUnit<'px' | '%'>;
+  paddingLeft?: MjUnit<'px' | '%'>;
   /** right offset */
-  'padding-right'?: MjUnit<'px' | '%'>;
+  paddingRight?: MjUnit<'px' | '%'>;
   /** top offset */
-  'padding-top'?: MjUnit<'px' | '%'>;
+  paddingTop?: MjUnit<'px' | '%'>;
   /** supports up to 4 parameters */
   padding?: MjUnit<'px' | '%'>;
   /** specify the role attribute */
   role?: 'none' | 'presentation';
   /** sets the table layout. */
-  'table-layout'?: 'auto' | 'fixed' | 'initial' | 'inherit';
-  'vertical-align'?: 'top' | 'bottom' | 'middle';
+  tableLayout?: 'auto' | 'fixed' | 'initial' | 'inherit';
+  verticalAlign?: 'top' | 'bottom' | 'middle';
   /** table width */
   width?: MjUnit<'px' | '%'>;
 };
@@ -605,47 +626,47 @@ export let MjTable = createComponent<MjTableProps>('mj-table');
 
 export type MjWrapperProps = {
   /** section color */
-  'background-color'?: string;
+  backgroundColor?: string;
   /** background url */
-  'background-url'?: string;
+  backgroundUrl?: string;
   /** css background repeat */
-  'background-repeat'?: 'repeat' | 'no-repeat';
+  backgroundRepeat?: 'repeat' | 'no-repeat';
   /** css background size */
-  'background-size'?: string;
+  backgroundSize?: string;
   /** css background position (see outlook limitations in mj-section doc) */
-  'background-position'?: string;
+  backgroundPosition?: string;
   /** css background position x */
-  'background-position-x'?: string;
+  backgroundPositionX?: string;
   /** css background position y */
-  'background-position-y'?: string;
+  backgroundPositionY?: string;
   /** css border format */
   border?: string;
   /** css border format */
-  'border-bottom'?: string;
+  borderBottom?: string;
   /** css border format */
-  'border-left'?: string;
+  borderLeft?: string;
   /** border radius */
-  'border-radius'?: string;
+  borderRadius?: string;
   /** css border format */
-  'border-right'?: string;
+  borderRight?: string;
   /** css border format */
-  'border-top'?: string;
+  borderTop?: string;
   direction?: 'ltr' | 'rtl';
   /** make the wrapper full-width */
-  'full-width'?: 'full-width' | 'false' | '';
+  fullWidth?: 'full-width' | 'false' | '';
   /** supports up to 4 parameters */
   padding?: MjUnit<'px' | '%'>;
   /** section top offset */
-  'padding-top'?: MjUnit<'px' | '%'>;
+  paddingTop?: MjUnit<'px' | '%'>;
   /** section bottom offset */
-  'padding-bottom'?: MjUnit<'px' | '%'>;
+  paddingBottom?: MjUnit<'px' | '%'>;
   /** section left offset */
-  'padding-left'?: MjUnit<'px' | '%'>;
+  paddingLeft?: MjUnit<'px' | '%'>;
   /** section right offset */
-  'padding-right'?: MjUnit<'px' | '%'>;
+  paddingRight?: MjUnit<'px' | '%'>;
   /** css text-align */
-  'text-align'?: 'left' | 'center' | 'right';
-  'text-padding'?: MjUnit<'px' | '%'>;
+  textAlign?: 'left' | 'center' | 'right';
+  textPadding?: MjUnit<'px' | '%'>;
 };
 
 /**
@@ -659,47 +680,47 @@ export type MjSocialProps = {
   /** left/right/center */
   align?: 'left' | 'right' | 'center';
   /** border radius */
-  'border-radius'?: MjUnit<'px' | '%'>;
+  borderRadius?: MjUnit<'px' | '%'>;
   /** inner element background color */
-  'container-background-color'?: string;
+  containerBackgroundColor?: string;
   /** text color */
   color?: string;
   /** font name */
-  'font-family'?: string;
+  fontFamily?: string;
   /** font size */
-  'font-size'?: MjUnit<'px'>;
+  fontSize?: MjUnit<'px'>;
   /** font style */
-  'font-style'?: string;
+  fontStyle?: string;
   /** font weight */
-  'font-weight'?: string;
+  fontWeight?: string;
   /** icon size (width and height) */
-  'icon-size'?: MjUnit<'px' | '%'>;
+  iconSize?: MjUnit<'px' | '%'>;
   /** icon height, overrides icon-size */
-  'icon-height'?: MjUnit<'px' | '%'>;
+  iconHeight?: MjUnit<'px' | '%'>;
   /** padding around the icons */
-  'icon-padding'?: MjUnit<'px' | '%'>;
+  iconPadding?: MjUnit<'px' | '%'>;
   /** social network surrounding padding */
-  'inner-padding'?: MjUnit<'px' | '%'>;
+  innerPadding?: MjUnit<'px' | '%'>;
   /** space between lines */
-  'line-height'?: MjUnit<'px' | '%' | ''>;
+  lineHeight?: MjUnit<'px' | '%' | ''>;
   /** vertical/horizontal */
   mode?: 'horizontal' | 'vertical';
   /** bottom offset */
-  'padding-bottom'?: MjUnit<'px' | '%'>;
+  paddingBottom?: MjUnit<'px' | '%'>;
   /** left offset */
-  'padding-left'?: MjUnit<'px' | '%'>;
+  paddingLeft?: MjUnit<'px' | '%'>;
   /** right offset */
-  'padding-right'?: MjUnit<'px' | '%'>;
+  paddingRight?: MjUnit<'px' | '%'>;
   /** top offset */
-  'padding-top'?: MjUnit<'px' | '%'>;
+  paddingTop?: MjUnit<'px' | '%'>;
   /** supports up to 4 parameters */
   padding?: MjUnit<'px' | '%'>;
-  'table-layout'?: 'auto' | 'fixed';
+  tableLayout?: 'auto' | 'fixed';
   /** padding around the texts */
-  'text-padding'?: MjUnit<'px' | '%'>;
+  textPadding?: MjUnit<'px' | '%'>;
   /** underline/overline/none */
-  'text-decoration'?: string;
-  'vertical-align'?: 'top' | 'bottom' | 'middle';
+  textDecoration?: string;
+  verticalAlign?: 'top' | 'bottom' | 'middle';
 };
 
 /**
@@ -711,25 +732,25 @@ export let MjSocial = createComponent<MjSocialProps>('mj-social');
 
 export type MjSocialElementProps = {
   align?: 'left' | 'center' | 'right';
-  'background-color'?: string;
+  backgroundColor?: string;
   color?: string;
-  'border-radius'?: MjUnit<'px'>;
-  'font-family'?: string;
-  'font-size'?: MjUnit<'px'>;
-  'font-style'?: string;
-  'font-weight'?: string;
+  borderRadius?: MjUnit<'px'>;
+  fontFamily?: string;
+  fontSize?: MjUnit<'px'>;
+  fontStyle?: string;
+  fontWeight?: string;
   href?: string;
-  'icon-size'?: MjUnit<'px' | '%'>;
-  'icon-height'?: MjUnit<'px' | '%'>;
-  'icon-padding'?: MjUnit<'px' | '%'>;
-  'line-height'?: MjUnit<'px' | '%' | ''>;
+  iconSize?: MjUnit<'px' | '%'>;
+  iconHeight?: MjUnit<'px' | '%'>;
+  iconPadding?: MjUnit<'px' | '%'>;
+  lineHeight?: MjUnit<'px' | '%' | ''>;
   name?: string;
-  'padding-bottom'?: MjUnit<'px' | '%'>;
-  'padding-left'?: MjUnit<'px' | '%'>;
-  'padding-right'?: MjUnit<'px' | '%'>;
-  'padding-top'?: MjUnit<'px' | '%'>;
+  paddingBottom?: MjUnit<'px' | '%'>;
+  paddingLeft?: MjUnit<'px' | '%'>;
+  paddingRight?: MjUnit<'px' | '%'>;
+  paddingTop?: MjUnit<'px' | '%'>;
   padding?: MjUnit<'px' | '%'>;
-  'text-padding'?: MjUnit<'px' | '%'>;
+  textPadding?: MjUnit<'px' | '%'>;
   rel?: string;
   src?: string;
   srcset?: string;
@@ -737,8 +758,8 @@ export type MjSocialElementProps = {
   alt?: string;
   title?: string;
   target?: string;
-  'text-decoration'?: string;
-  'vertical-align'?: 'top' | 'middle' | 'bottom';
+  textDecoration?: string;
+  verticalAlign?: 'top' | 'middle' | 'bottom';
 };
 
 /**
@@ -751,42 +772,42 @@ export let MjSocialElement = createComponent<MjSocialElementProps>('mj-social-el
 export type MjNavbarProps = {
   /** align content left/center/right */
   align?: 'left' | 'center' | 'right';
-  'base-url'?: string;
+  baseUrl?: string;
   /** activate the hamburger navigation on mobile if the value is hamburger */
   hamburger?: string;
   /** hamburger icon alignment, left/center/right (hamburger mode required) */
-  'ico-align'?: 'left' | 'center' | 'right';
+  icoAlign?: 'left' | 'center' | 'right';
   /** char code for a custom open icon (hamburger mode required) */
-  'ico-open'?: string;
+  icoOpen?: string;
   /** char code for a custom close icon (hamburger mode required) */
-  'ico-close'?: string;
+  icoClose?: string;
   /** hamburger icon color (hamburger mode required) */
-  'ico-color'?: string;
+  icoColor?: string;
   /** hamburger icon size (hamburger mode required) */
-  'ico-font-size'?: MjUnit<'px' | '%'>;
+  icoFontSize?: MjUnit<'px' | '%'>;
   /** hamburger icon font (only on hamburger mode) */
-  'ico-font-family'?: string;
+  icoFontFamily?: string;
   /** hamburger icon text transformation none/capitalize/uppercase/lowercase (hamburger mode required) */
-  'ico-text-transform'?: string;
+  icoTextTransform?: string;
   /** hamburger icon padding, supports up to 4 parameters (hamburger mode required) */
-  'ico-padding'?: MjUnit<'px' | '%'>;
+  icoPadding?: MjUnit<'px' | '%'>;
   /** hamburger icon left offset (hamburger mode required) */
-  'ico-padding-left'?: MjUnit<'px' | '%'>;
+  icoPaddingLeft?: MjUnit<'px' | '%'>;
   /** hamburger icon top offset (hamburger mode required) */
-  'ico-padding-top'?: MjUnit<'px' | '%'>;
+  icoPaddingTop?: MjUnit<'px' | '%'>;
   /** hamburger icon right offset (hamburger mode required) */
-  'ico-padding-right'?: MjUnit<'px' | '%'>;
+  icoPaddingRight?: MjUnit<'px' | '%'>;
   /** hamburger icon bottom offset (hamburger mode required) */
-  'ico-padding-bottom'?: MjUnit<'px' | '%'>;
+  icoPaddingBottom?: MjUnit<'px' | '%'>;
   padding?: MjUnit<'px' | '%'>;
-  'padding-left'?: MjUnit<'px' | '%'>;
-  'padding-top'?: MjUnit<'px' | '%'>;
-  'padding-right'?: MjUnit<'px' | '%'>;
-  'padding-bottom'?: MjUnit<'px' | '%'>;
+  paddingLeft?: MjUnit<'px' | '%'>;
+  paddingTop?: MjUnit<'px' | '%'>;
+  paddingRight?: MjUnit<'px' | '%'>;
+  paddingBottom?: MjUnit<'px' | '%'>;
   /** hamburger icon text decoration none/underline/overline/line-through (hamburger mode required) */
-  'ico-text-decoration'?: string;
+  icoTextDecoration?: string;
   /** hamburger icon line height (hamburger mode required) */
-  'ico-line-height'?: MjUnit<'px' | '%' | ''>;
+  icoLineHeight?: MjUnit<'px' | '%' | ''>;
 };
 
 /**
@@ -798,23 +819,23 @@ export let MjNavbar = createComponent<MjNavbarProps>('mj-navbar');
 
 export type MjNavbarLinkProps = {
   color?: string;
-  'font-family'?: string;
-  'font-size'?: MjUnit<'px'>;
-  'font-style'?: string;
-  'font-weight'?: string;
+  fontFamily?: string;
+  fontSize?: MjUnit<'px'>;
+  fontStyle?: string;
+  fontWeight?: string;
   href?: string;
   name?: string;
   target?: string;
   rel?: string;
-  'letter-spacing'?: MjUnit<'px' | 'em'>;
-  'line-height'?: MjUnit<'px' | '%' | ''>;
-  'padding-bottom'?: MjUnit<'px' | '%'>;
-  'padding-left'?: MjUnit<'px' | '%'>;
-  'padding-right'?: MjUnit<'px' | '%'>;
-  'padding-top'?: MjUnit<'px' | '%'>;
+  letterSpacing?: MjUnit<'px' | 'em'>;
+  lineHeight?: MjUnit<'px' | '%' | ''>;
+  paddingBottom?: MjUnit<'px' | '%'>;
+  paddingLeft?: MjUnit<'px' | '%'>;
+  paddingRight?: MjUnit<'px' | '%'>;
+  paddingTop?: MjUnit<'px' | '%'>;
   padding?: MjUnit<'px' | '%'>;
-  'text-decoration'?: string;
-  'text-transform'?: string;
+  textDecoration?: string;
+  textTransform?: string;
 };
 
 /**
@@ -826,35 +847,35 @@ export let MjNavbarLink = createComponent<MjNavbarLinkProps>('mj-navbar-link');
 
 export type MjAccordionProps = {
   /** background-color of the cell */
-  'container-background-color'?: string;
+  containerBackgroundColor?: string;
   /** CSS border format */
   border?: string;
   /** font */
-  'font-family'?: string;
+  fontFamily?: string;
   /** icon alignment */
-  'icon-align'?: 'top' | 'middle' | 'bottom';
+  iconAlign?: 'top' | 'middle' | 'bottom';
   /** icon height */
-  'icon-width'?: MjUnit<'px' | '%'>;
+  iconWidth?: MjUnit<'px' | '%'>;
   /** icon width */
-  'icon-height'?: MjUnit<'px' | '%'>;
+  iconHeight?: MjUnit<'px' | '%'>;
   /** icon when accordion is wrapped */
-  'icon-wrapped-url'?: string;
+  iconWrappedUrl?: string;
   /** alt text when accordion is wrapped */
-  'icon-wrapped-alt'?: string;
+  iconWrappedAlt?: string;
   /** icon when accordion is unwrapped */
-  'icon-unwrapped-url'?: string;
+  iconUnwrappedUrl?: string;
   /** alt text when accordion is unwrapped */
-  'icon-unwrapped-alt'?: string;
+  iconUnwrappedAlt?: string;
   /** display icon left or right */
-  'icon-position'?: 'left' | 'right';
+  iconPosition?: 'left' | 'right';
   /** padding bottom */
-  'padding-bottom'?: MjUnit<'px' | '%'>;
+  paddingBottom?: MjUnit<'px' | '%'>;
   /** padding left */
-  'padding-left'?: MjUnit<'px' | '%'>;
+  paddingLeft?: MjUnit<'px' | '%'>;
   /** padding right */
-  'padding-right'?: MjUnit<'px' | '%'>;
+  paddingRight?: MjUnit<'px' | '%'>;
   /** padding top */
-  'padding-top'?: MjUnit<'px' | '%'>;
+  paddingTop?: MjUnit<'px' | '%'>;
   /** padding */
   padding?: MjUnit<'px' | '%'>;
 };
@@ -867,17 +888,17 @@ export type MjAccordionProps = {
 export let MjAccordion = createComponent<MjAccordionProps>('mj-accordion');
 
 export type MjAccordionElementProps = {
-  'background-color'?: string;
+  backgroundColor?: string;
   border?: string;
-  'font-family'?: string;
-  'icon-align'?: 'top' | 'middle' | 'bottom';
-  'icon-width'?: MjUnit<'px' | '%'>;
-  'icon-height'?: MjUnit<'px' | '%'>;
-  'icon-wrapped-url'?: string;
-  'icon-wrapped-alt'?: string;
-  'icon-unwrapped-url'?: string;
-  'icon-unwrapped-alt'?: string;
-  'icon-position'?: 'left' | 'right';
+  fontFamily?: string;
+  iconAlign?: 'top' | 'middle' | 'bottom';
+  iconWidth?: MjUnit<'px' | '%'>;
+  iconHeight?: MjUnit<'px' | '%'>;
+  iconWrappedUrl?: string;
+  iconWrappedAlt?: string;
+  iconUnwrappedUrl?: string;
+  iconUnwrappedAlt?: string;
+  iconPosition?: 'left' | 'right';
 };
 
 /**
@@ -888,17 +909,17 @@ export type MjAccordionElementProps = {
 export let MjAccordionElement = createComponent<MjAccordionElementProps>('mj-accordion-element');
 
 export type MjAccordionTextProps = {
-  'background-color'?: string;
-  'font-size'?: MjUnit<'px'>;
-  'font-family'?: string;
-  'font-weight'?: string;
-  'letter-spacing'?: MjUnit<'px' | 'em'>;
-  'line-height'?: MjUnit<'px' | '%' | ''>;
+  backgroundColor?: string;
+  fontSize?: MjUnit<'px'>;
+  fontFamily?: string;
+  fontWeight?: string;
+  letterSpacing?: MjUnit<'px' | 'em'>;
+  lineHeight?: MjUnit<'px' | '%' | ''>;
   color?: string;
-  'padding-bottom'?: MjUnit<'px' | '%'>;
-  'padding-left'?: MjUnit<'px' | '%'>;
-  'padding-right'?: MjUnit<'px' | '%'>;
-  'padding-top'?: MjUnit<'px' | '%'>;
+  paddingBottom?: MjUnit<'px' | '%'>;
+  paddingLeft?: MjUnit<'px' | '%'>;
+  paddingRight?: MjUnit<'px' | '%'>;
+  paddingTop?: MjUnit<'px' | '%'>;
   padding?: MjUnit<'px' | '%'>;
 };
 
@@ -910,14 +931,14 @@ export type MjAccordionTextProps = {
 export let MjAccordionText = createComponent<MjAccordionTextProps>('mj-accordion-text');
 
 export type MjAccordionTitleProps = {
-  'background-color'?: string;
+  backgroundColor?: string;
   color?: string;
-  'font-size'?: MjUnit<'px'>;
-  'font-family'?: string;
-  'padding-bottom'?: MjUnit<'px' | '%'>;
-  'padding-left'?: MjUnit<'px' | '%'>;
-  'padding-right'?: MjUnit<'px' | '%'>;
-  'padding-top'?: MjUnit<'px' | '%'>;
+  fontSize?: MjUnit<'px'>;
+  fontFamily?: string;
+  paddingBottom?: MjUnit<'px' | '%'>;
+  paddingLeft?: MjUnit<'px' | '%'>;
+  paddingRight?: MjUnit<'px' | '%'>;
+  paddingTop?: MjUnit<'px' | '%'>;
   padding?: MjUnit<'px' | '%'>;
 };
 
@@ -932,32 +953,32 @@ export type MjCarouselProps = {
   /** horizontal alignment */
   align?: 'left' | 'center' | 'right';
   /** border radius */
-  'border-radius'?: MjUnit<'px' | '%'>;
+  borderRadius?: MjUnit<'px' | '%'>;
   /** column background color */
-  'container-background-color'?: string;
+  containerBackgroundColor?: string;
   /** width of the icons on left and right of the main image */
-  'icon-width'?: MjUnit<'px' | '%'>;
+  iconWidth?: MjUnit<'px' | '%'>;
   /** icon on the left of the main image */
-  'left-icon'?: string;
+  leftIcon?: string;
   padding?: MjUnit<'px' | '%'>;
-  'padding-top'?: MjUnit<'px' | '%'>;
-  'padding-bottom'?: MjUnit<'px' | '%'>;
-  'padding-left'?: MjUnit<'px' | '%'>;
-  'padding-right'?: MjUnit<'px' | '%'>;
+  paddingTop?: MjUnit<'px' | '%'>;
+  paddingBottom?: MjUnit<'px' | '%'>;
+  paddingLeft?: MjUnit<'px' | '%'>;
+  paddingRight?: MjUnit<'px' | '%'>;
   /** icon on the right of the main image */
-  'right-icon'?: string;
+  rightIcon?: string;
   /** display or not the thumbnails (visible */
   thumbnails?: 'visible' | 'hidden';
   /** border of the thumbnails */
-  'tb-border'?: string;
+  tbBorder?: string;
   /** border-radius of the thumbnails */
-  'tb-border-radius'?: MjUnit<'px' | '%'>;
+  tbBorderRadius?: MjUnit<'px' | '%'>;
   /** css border color of the hovered thumbnail */
-  'tb-hover-border-color'?: string;
+  tbHoverBorderColor?: string;
   /** css border color of the selected thumbnail */
-  'tb-selected-border-color'?: string;
+  tbSelectedBorderColor?: string;
   /** thumbnail width */
-  'tb-width'?: MjUnit<'px' | '%'>;
+  tbWidth?: MjUnit<'px' | '%'>;
 };
 
 /**
@@ -974,10 +995,10 @@ export type MjCarouselImageProps = {
   target?: string;
   title?: string;
   src?: string;
-  'thumbnails-src'?: string;
-  'border-radius'?: MjUnit<'px' | '%'>;
-  'tb-border'?: string;
-  'tb-border-radius'?: MjUnit<'px' | '%'>;
+  thumbnailsSrc?: string;
+  borderRadius?: MjUnit<'px' | '%'>;
+  tbBorder?: string;
+  tbBorderRadius?: MjUnit<'px' | '%'>;
 };
 
 /**

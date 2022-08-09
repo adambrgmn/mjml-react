@@ -11,24 +11,46 @@ import { PropsDocumentation, generatePropsDocumentation } from './generate-docs'
 
   let baseDeclarations = `
 import React from 'react';
+import _ from 'lodash';
 
-export type MjUnit<Suffix extends string> = \`\${number}\${Suffix}\`;
+type MjUnitBase<Suffix extends string> = \`\${number}\${Suffix}\` | '0';
+export type MjUnit<Suffix extends string> =
+  | \`\${MjUnitBase<Suffix>}\`
+  | \`\${MjUnitBase<Suffix>} \${MjUnitBase<Suffix>}\`
+  | \`\${MjUnitBase<Suffix>} \${MjUnitBase<Suffix>} \${MjUnitBase<Suffix>}\`
+  | \`\${MjUnitBase<Suffix>} \${MjUnitBase<Suffix>} \${MjUnitBase<Suffix>} \${MjUnitBase<Suffix>}\`
 
 export type MjmlBaseProps = {
   /** class name, added to the root HTML element created */
   className?: string;
   /** class name, added to the root HTML element created */
-  'css-class'?: string
+  cssClass?: string
   children?: React.ReactNode;
 }
 
 export type MjmlComponent<Props> = React.FC<Props & MjmlBaseProps>;
 
-function createComponent<Props>(Name: string): MjmlComponent<Props> {
-  const Component: MjmlComponent<Props> = ({ className, 'css-class': cssClass, children, ...rest }) => {
+type KebabCase<T extends string, A extends string = ""> =
+    T extends \`\${infer F}\${infer R}\` ?
+    KebabCase<R, \`\${A}\${F extends Lowercase<F> ? "" : "-"}\${Lowercase<F>}\`> :
+    A
+
+type KebabCaseKeys<T> = { [K in keyof T as K extends string ? KebabCase<K> : K]: T[K] };
+
+function handleMjmlProps<T extends Record<string, unknown>>(props: T): KebabCaseKeys<T> {
+  let converted: Record<string, unknown> = {};
+  for (let [key, value] of Object.entries(props)) {
+    converted[_.kebabCase(key)] = value;
+  }
+  return converted as KebabCaseKeys<T>;
+}
+
+function createComponent<Props extends Record<string, unknown>>(Name: string): MjmlComponent<Props> {
+  const Component: MjmlComponent<Props> = ({ className, cssClass, children, ...rest }) => {
+    let props = handleMjmlProps(rest);
     return (
       // ${'@ts-expect-error'}
-      <Name {...rest} css-class={cssClass ?? className}>
+      <Name {...props} css-class={cssClass ?? className}>
         {children}
       </Name>
     );
@@ -78,14 +100,14 @@ function buildProps(attributes: Record<string, string>, docs: PropsDocumentation
 
     switch (rawType) {
       case 'boolean':
-        rows.push(`'${key}'?: boolean;`);
+        rows.push(`'${_.camelCase(key)}'?: boolean;`);
         break;
       case 'integer':
-        rows.push(`'${key}'?: number;`);
+        rows.push(`'${_.camelCase(key)}'?: number;`);
         break;
       case 'string':
       case 'color':
-        rows.push(`'${key}'?: string;`);
+        rows.push(`'${_.camelCase(key)}'?: string;`);
         break;
       case 'enum': {
         let values = type
@@ -95,7 +117,7 @@ function buildProps(attributes: Record<string, string>, docs: PropsDocumentation
           .map((v) => `'${v.trim()}'`)
           .join(' | ');
 
-        rows.push(`'${key}'?: ${values};`);
+        rows.push(`'${_.camelCase(key)}'?: ${values};`);
         break;
       }
       case 'unitWithNegative':
@@ -106,7 +128,7 @@ function buildProps(attributes: Record<string, string>, docs: PropsDocumentation
           .split(',')
           .map((u) => `'${u.trim()}'`)
           .join(' | ');
-        rows.push(`'${key}'?: MjUnit<${units}>;`);
+        rows.push(`'${_.camelCase(key)}'?: MjUnit<${units}>;`);
         break;
       }
       default:
