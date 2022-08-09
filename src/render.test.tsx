@@ -1,12 +1,12 @@
 import React from 'react';
-import { it, expect } from 'vitest';
-import { render, Mjml } from './render';
-import { MjHead, MjBody, MjSection, MjColumn, MjText } from './components';
+import { expect, it } from 'vitest';
+
+import { MjBody, MjColumn, MjSection, MjText } from './components';
+import { Mjml, render } from './render';
 
 it('renders mjml formatted emails from react components', () => {
   let { html } = render(
     <Mjml>
-      <MjHead></MjHead>
       <MjBody>
         <MjSection>
           <MjColumn>
@@ -23,7 +23,6 @@ it('renders mjml formatted emails from react components', () => {
 it('is possible to pass in custom font imports', () => {
   let { html } = render(
     <Mjml>
-      <MjHead></MjHead>
       <MjBody>
         <MjSection>
           <MjColumn>
@@ -42,7 +41,6 @@ it('throws ValidationError if mjml validation fails', () => {
   expect(() =>
     render(
       <Mjml>
-        <MjHead />
         <MjBody>
           <MjText>Hello world!</MjText>
         </MjBody>
@@ -54,7 +52,6 @@ it('throws ValidationError if mjml validation fails', () => {
 it('is possible to supress throwing on validation errors', () => {
   let { errors } = render(
     <Mjml>
-      <MjHead />
       <MjBody>
         <MjText>Hello world!</MjText>
       </MjBody>
@@ -65,8 +62,7 @@ it('is possible to supress throwing on validation errors', () => {
   expect(errors).toEqual([
     {
       line: 1,
-      message:
-        'mj-text cannot be used inside mj-body, only inside: mj-attributes, mj-column, mj-hero',
+      message: 'mj-text cannot be used inside mj-body, only inside: mj-attributes, mj-column, mj-hero',
       tagName: 'mj-text',
       formattedMessage:
         'Line 1 of /Users/adam.bergman/Developer/adambrgmn/mjml-react (mj-text) — mj-text cannot be used inside mj-body, only inside: mj-attributes, mj-column, mj-hero',
@@ -77,7 +73,6 @@ it('is possible to supress throwing on validation errors', () => {
 it('is possible to ignore validation altogether', () => {
   let { errors } = render(
     <Mjml>
-      <MjHead />
       <MjBody>
         <MjText>Hello world!</MjText>
       </MjBody>
@@ -91,7 +86,6 @@ it('is possible to ignore validation altogether', () => {
 it('applies className as css-class prop to mjml elements', () => {
   let { html } = render(
     <Mjml>
-      <MjHead></MjHead>
       <MjBody>
         <MjSection>
           <MjColumn>

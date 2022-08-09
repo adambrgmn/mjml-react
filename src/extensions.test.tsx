@@ -1,8 +1,9 @@
 import React from 'react';
-import { it, expect } from 'vitest';
-import { render, Mjml } from './render';
-import { MjHead, MjBody } from './components';
-import { MjConditionalTag, MjComment } from './extensions';
+import { expect, it } from 'vitest';
+
+import { MjBody, MjHead } from './components';
+import { MjComment, MjConditionalTag } from './extensions';
+import { Mjml, render } from './render';
 
 it('is possible to render with conditionals', () => {
   let { html } = render(

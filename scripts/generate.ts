@@ -1,11 +1,10 @@
-import 'mjml';
 import * as fs from 'node:fs';
-import { components as mjmlComponents } from 'mjml-core';
+
 import _ from 'lodash';
-import {
-  generatePropsDocumentation,
-  PropsDocumentation,
-} from './generate-docs';
+import 'mjml';
+import { components as mjmlComponents } from 'mjml-core';
+
+import { PropsDocumentation, generatePropsDocumentation } from './generate-docs';
 
 (async () => {
   let sections: string[] = [];
@@ -27,8 +26,12 @@ export type MjmlComponent<Props> = React.FC<Props & MjmlBaseProps>;
 
 function createComponent<Props>(Name: string): MjmlComponent<Props> {
   const Component: MjmlComponent<Props> = ({ className, 'css-class': cssClass, children, ...rest }) => {
-    // ${'@ts-expect-error'}
-    return <Name {...rest} css-class={cssClass ?? className}>{children}</Name>;
+    return (
+      // ${'@ts-expect-error'}
+      <Name {...rest} css-class={cssClass ?? className}>
+        {children}
+      </Name>
+    );
   };
   Component.displayName = Name;
 
@@ -43,10 +46,7 @@ function createComponent<Props>(Name: string): MjmlComponent<Props> {
   for (let [name, component] of Object.entries(mjmlComponents)) {
     if (component == null) continue;
 
-    let props = buildProps(
-      (component as unknown as any).allowedAttributes ?? {},
-      docs[name]?.props ?? {},
-    );
+    let props = buildProps((component as unknown as any).allowedAttributes ?? {}, docs[name]?.props ?? {});
     let componentName = _.upperFirst(_.camelCase(name));
 
     let def = `
@@ -66,10 +66,7 @@ export let ${componentName} = createComponent<${componentName}Props>('${name}');
   fs.writeFileSync('./src/components.tsx', sections.join('\n\n'));
 })();
 
-function buildProps(
-  attributes: Record<string, string>,
-  docs: PropsDocumentation[string]['props'],
-) {
+function buildProps(attributes: Record<string, string>, docs: PropsDocumentation[string]['props']) {
   let rows: string[] = [];
 
   for (let [key, type] of Object.entries(attributes)) {

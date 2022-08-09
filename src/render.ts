@@ -37,11 +37,11 @@ export function render(
 
 type MjmlProps = {
   /** if set to "desktop", switch force desktop version for older (self-hosted) version of Outlook.com that doesn't support media queries */
-  owa: string;
+  owa?: string;
   /** used as <html lang=""> attribute */
-  lang: string;
+  lang?: string;
   /** used as <html dir=""> attribute */
-  dir: string;
+  dir?: string;
   children: React.ReactNode;
 };
 

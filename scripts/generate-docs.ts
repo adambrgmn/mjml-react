@@ -7,10 +7,7 @@ export type Prop = {
   defaultValue: string;
 };
 
-export type PropsDocumentation = Record<
-  string,
-  { description: string; props: Record<string, Prop> }
->;
+export type PropsDocumentation = Record<string, { description: string; props: Record<string, Prop> }>;
 
 export async function generatePropsDocumentation(): Promise<PropsDocumentation> {
   let response = await fetch('https://documentation.mjml.io/');
@@ -22,11 +19,7 @@ export async function generatePropsDocumentation(): Promise<PropsDocumentation> 
   if (!content.is('div')) throw new Error('Can not find page content');
 
   let headings = $('h1', content);
-  let relevantHeadings = [
-    'components',
-    'standard head components',
-    'standard body components',
-  ];
+  let relevantHeadings = ['components', 'standard head components', 'standard body components'];
 
   let docs: PropsDocumentation = {};
 
@@ -44,9 +37,7 @@ export async function generatePropsDocumentation(): Promise<PropsDocumentation> 
         .filter((_, el) => el.tagName.toLowerCase() === 'table')
         .first();
 
-      let description = $(componentHeading).next(
-        'p[style!="text-align: center;"]',
-      );
+      let description = $(componentHeading).next('p[style!="text-align: center;"]');
 
       if (!table.is('table')) continue;
 
