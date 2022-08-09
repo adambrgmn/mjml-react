@@ -20,7 +20,8 @@
     "lint": "eslint . --ext .ts --ext .tsx",
     "format": "prettier --write '**/*.{ts,tsx}'",
     "release": "npm run build && npx changeset publish",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "example": "node -r esbuild-register ./example/server.ts"
   },
   "peerDependencies": {
     "mjml": "^4.13.0",
@@ -46,6 +47,7 @@
     "husky": "^8.0.1",
     "lint-staged": "^13.0.3",
     "lodash": "^4.17.21",
+    "micro": "^9.4.1",
     "mjml": "^4.13.0",
     "mjml-core": "^4.13.0",
     "prettier": "^2.7.1",
