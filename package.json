@@ -1,0 +1,42 @@
+{
+  "name": "@fransvilhelm/mjml-react",
+  "version": "0.0.0",
+  "description": "",
+  "author": "Adam Bergman <adam@fransvilhelm.com>",
+  "license": "MIT",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    "imports": "./dist/index.mjs",
+    "require": "./dist/index.js"
+  },
+  "scripts": {
+    "prebuild": "npm run generate",
+    "build": "tsup --dts",
+    "test": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "generate": "node -r esbuild-register ./scripts/generate.ts"
+  },
+  "dependencies": {
+    "mjml": "^4.13.0",
+    "mjml-core": "^4.13.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.182",
+    "@types/mjml": "^4.7.0",
+    "@types/mjml-core": "^4.7.1",
+    "@types/node": "^18.6.5",
+    "@types/react": "^18.0.17",
+    "@types/react-dom": "^18.0.6",
+    "cheerio": "^1.0.0-rc.12",
+    "esbuild": "^0.14.54",
+    "esbuild-register": "^3.3.3",
+    "lodash": "^4.17.21",
+    "tsup": "^6.2.1",
+    "typescript": "^4.7.4",
+    "vitest": "^0.21.0"
+  }
+}
