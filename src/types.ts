@@ -10,6 +10,8 @@ export type MjmlBaseProps = {
   className?: string;
   /** class name, added to the root HTML element created */
   cssClass?: string;
+  /** mj-class tags create a named group of MJML attributes you can apply to MJML components. To apply them, use mj-class="<name>" */
+  mjClass?: string;
   children?: React.ReactNode;
 };
 
