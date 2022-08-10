@@ -1,67 +1,21 @@
 import * as fs from 'node:fs';
 
-import _ from 'lodash';
+import { camelCase, upperFirst } from 'lodash-es';
 import 'mjml';
 import { components as mjmlComponents } from 'mjml-core';
+import prettier from 'prettier';
 
 import { PropsDocumentation, generatePropsDocumentation } from './generate-docs';
 
 (async () => {
   let sections: string[] = [];
 
-  let baseDeclarations = `
-import React from 'react';
-import _ from 'lodash';
+  let imports = `
+import { createComponent } from './create-component';
+import { MjUnit } from './types';
+`.trim();
 
-type MjUnitBase<Suffix extends string> = \`\${number}\${Suffix}\` | '0';
-export type MjUnit<Suffix extends string> =
-  | \`\${MjUnitBase<Suffix>}\`
-  | \`\${MjUnitBase<Suffix>} \${MjUnitBase<Suffix>}\`
-  | \`\${MjUnitBase<Suffix>} \${MjUnitBase<Suffix>} \${MjUnitBase<Suffix>}\`
-  | \`\${MjUnitBase<Suffix>} \${MjUnitBase<Suffix>} \${MjUnitBase<Suffix>} \${MjUnitBase<Suffix>}\`
-
-export type MjmlBaseProps = {
-  /** class name, added to the root HTML element created */
-  className?: string;
-  /** class name, added to the root HTML element created */
-  cssClass?: string
-  children?: React.ReactNode;
-}
-
-export type MjmlComponent<Props> = React.FC<Props & MjmlBaseProps>;
-
-type KebabCase<T extends string, A extends string = ""> =
-    T extends \`\${infer F}\${infer R}\` ?
-    KebabCase<R, \`\${A}\${F extends Lowercase<F> ? "" : "-"}\${Lowercase<F>}\`> :
-    A
-
-type KebabCaseKeys<T> = { [K in keyof T as K extends string ? KebabCase<K> : K]: T[K] };
-
-function handleMjmlProps<T extends Record<string, unknown>>(props: T): KebabCaseKeys<T> {
-  let converted: Record<string, unknown> = {};
-  for (let [key, value] of Object.entries(props)) {
-    converted[_.kebabCase(key)] = value;
-  }
-  return converted as KebabCaseKeys<T>;
-}
-
-function createComponent<Props extends Record<string, unknown>>(Name: string): MjmlComponent<Props> {
-  const Component: MjmlComponent<Props> = ({ className, cssClass, children, ...rest }) => {
-    let props = handleMjmlProps(rest);
-    return (
-      // ${'@ts-expect-error'}
-      <Name {...props} css-class={cssClass ?? className}>
-        {children}
-      </Name>
-    );
-  };
-  Component.displayName = Name;
-
-  return Component;
-}
-`;
-
-  sections.push(baseDeclarations);
+  sections.push(imports);
 
   let docs = await generatePropsDocumentation();
 
@@ -69,7 +23,7 @@ function createComponent<Props extends Record<string, unknown>>(Name: string): M
     if (component == null) continue;
 
     let props = buildProps((component as unknown as any).allowedAttributes ?? {}, docs[name]?.props ?? {});
-    let componentName = _.upperFirst(_.camelCase(name));
+    let componentName = upperFirst(camelCase(name));
 
     let def = `
 export type ${componentName}Props = ${props};
@@ -85,7 +39,9 @@ export let ${componentName} = createComponent<${componentName}Props>('${name}');
     sections.push(def);
   }
 
-  fs.writeFileSync('./src/components.tsx', sections.join('\n\n'));
+  let prettierConfig = JSON.parse(fs.readFileSync('./.prettierrc', 'utf-8'));
+  let code = prettier.format(sections.join('\n\n'), { parser: 'typescript', ...prettierConfig });
+  fs.writeFileSync('./src/components.tsx', code);
 })();
 
 function buildProps(attributes: Record<string, string>, docs: PropsDocumentation[string]['props']) {
@@ -100,14 +56,14 @@ function buildProps(attributes: Record<string, string>, docs: PropsDocumentation
 
     switch (rawType) {
       case 'boolean':
-        rows.push(`'${_.camelCase(key)}'?: boolean;`);
+        rows.push(`'${camelCase(key)}'?: boolean;`);
         break;
       case 'integer':
-        rows.push(`'${_.camelCase(key)}'?: number;`);
+        rows.push(`'${camelCase(key)}'?: number;`);
         break;
       case 'string':
       case 'color':
-        rows.push(`'${_.camelCase(key)}'?: string;`);
+        rows.push(`'${camelCase(key)}'?: string;`);
         break;
       case 'enum': {
         let values = type
@@ -117,7 +73,7 @@ function buildProps(attributes: Record<string, string>, docs: PropsDocumentation
           .map((v) => `'${v.trim()}'`)
           .join(' | ');
 
-        rows.push(`'${_.camelCase(key)}'?: ${values};`);
+        rows.push(`'${camelCase(key)}'?: ${values};`);
         break;
       }
       case 'unitWithNegative':
@@ -128,7 +84,7 @@ function buildProps(attributes: Record<string, string>, docs: PropsDocumentation
           .split(',')
           .map((u) => `'${u.trim()}'`)
           .join(' | ');
-        rows.push(`'${_.camelCase(key)}'?: MjUnit<${units}>;`);
+        rows.push(`'${camelCase(key)}'?: MjUnit<${units}>;`);
         break;
       }
       default:
