@@ -2,9 +2,9 @@ import micro, { send } from 'micro';
 import { createElement } from 'react';
 
 import { render } from '../dist';
-import { Austin } from './austin';
-import { HappyNewYear } from './happy-new-year';
-import { Receipt } from './receipt';
+import { Austin } from './Austin';
+import { HappyNewYear } from './HappyNewYear';
+import { Receipt } from './Receipt';
 
 const templates = {
   receipt: createElement(Receipt),
