@@ -1,32 +1,34 @@
+/* eslint-disable testing-library/render-result-naming-convention */
 import React from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { expect, it } from 'vitest';
 
-import { MjBody, MjHead } from './components';
+import { MjBody } from './components';
 import { MjComment, MjConditionalTag } from './extensions';
-import { Mjml, render } from './render';
+import { Mjml } from './render';
 
 it('is possible to render with conditionals', () => {
-  let { html } = render(
+  let html = renderToStaticMarkup(
     <Mjml>
-      <MjHead></MjHead>
       <MjBody>
         <MjConditionalTag>Hello world!</MjConditionalTag>
       </MjBody>
     </Mjml>,
   );
 
-  expect(html).toMatchSnapshot();
+  expect(html).toMatchInlineSnapshot(
+    '"<mjml><mj-body><mj-raw><!--[if gte mso 9]>Hello world!<![endif]--></mj-raw></mj-body></mjml>"',
+  );
 });
 
 it('is possible to render html comments', () => {
-  let { html } = render(
+  let html = renderToStaticMarkup(
     <Mjml>
-      <MjHead></MjHead>
       <MjBody>
         <MjComment>Hello world!</MjComment>
       </MjBody>
     </Mjml>,
   );
 
-  expect(html).toMatchSnapshot();
+  expect(html).toMatchInlineSnapshot('"<mjml><mj-body><mj-raw><!--Hello world!--></mj-raw></mj-body></mjml>"');
 });

@@ -7,6 +7,9 @@ import prettier from 'prettier';
 
 import { PropsDocumentation, generatePropsDocumentation } from './generate-docs';
 
+// These components require special treatment and are overridden in src/overrides.tsx
+const ignored = ['mj-class', 'mj-all', 'mj-style'];
+
 (async () => {
   let sections: string[] = [];
 
@@ -20,6 +23,8 @@ import { MjUnit } from './types';
   let docs = await generatePropsDocumentation();
 
   for (let [name, component] of Object.entries(mjmlComponents)) {
+    if (ignored.includes(name)) continue;
+
     if (component == null) continue;
 
     let props = buildProps((component as unknown as any).allowedAttributes ?? {}, docs[name]?.props ?? {});

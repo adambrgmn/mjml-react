@@ -3,15 +3,16 @@ import { describe, expect, it } from 'vitest';
 
 import { MjAttributes, MjBody, MjColumn, MjHead, MjSection, MjText } from './components';
 import { MjAll, MjClass, MjStyle, css } from './overrides';
-import { Mjml, render } from './render';
+import { Mjml } from './render';
+import { render, screen } from './test-utils';
 
 describe('MjAll', () => {
   it('applies props to all elements', () => {
-    let { html } = render(
+    render(
       <Mjml>
         <MjHead>
           <MjAttributes>
-            <MjAll font-family="Arial" fontSize="8px" color="red" />
+            <MjAll fontFamily="Arial" fontSize="8px" color="red" />
           </MjAttributes>
         </MjHead>
         <MjBody>
@@ -24,13 +25,17 @@ describe('MjAll', () => {
       </Mjml>,
     );
 
-    expect(html).toMatchSnapshot();
+    expect(screen.getByText('Hello World!')).toHaveStyle({
+      fontFamily: 'Arial',
+      fontSize: '8px',
+      color: 'red',
+    });
   });
 });
 
 describe('MjClass', () => {
   it('works as mj-class is expected to work', () => {
-    let { html } = render(
+    render(
       <Mjml>
         <MjHead>
           <MjAttributes>
@@ -48,19 +53,20 @@ describe('MjClass', () => {
       </Mjml>,
     );
 
-    expect(html).toMatchSnapshot();
+    expect(screen.getByText('Hello World!')).toHaveStyle({ color: 'blue', fontSize: '20px' });
   });
 });
 
 describe('MjStyle', () => {
   it('works as mj-style is expected to work', () => {
-    let { html } = render(
+    let color = 'blue';
+    render(
       <Mjml>
         <MjHead>
           <MjStyle
             css={css`
               .link {
-                color: blue;
+                color: ${color};
               }
             `}
           />
@@ -75,7 +81,8 @@ describe('MjStyle', () => {
       </Mjml>,
     );
 
-    expect(html).toMatchSnapshot();
+    expect(screen.getByText('Hello World!').parentElement).toHaveClass('link');
+    expect(screen.getByText('Hello World!').parentElement).toHaveStyle({ color: 'blue' });
   });
 
   it('works as mj-style with inline is expected to work', () => {
@@ -101,6 +108,7 @@ describe('MjStyle', () => {
       </Mjml>,
     );
 
-    expect(html).toMatchSnapshot();
+    expect(html).not.toContain('.link');
+    expect(screen.getByText('Hello World!').parentElement).toHaveStyle({ color: 'blue' });
   });
 });

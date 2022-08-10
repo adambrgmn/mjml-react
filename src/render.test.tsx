@@ -2,7 +2,8 @@ import React from 'react';
 import { expect, it } from 'vitest';
 
 import { MjBody, MjColumn, MjSection, MjText } from './components';
-import { Mjml, render } from './render';
+import { Mjml } from './render';
+import { render, screen } from './test-utils';
 
 it('renders mjml formatted emails from react components', () => {
   let { html } = render(
@@ -96,6 +97,8 @@ it('applies className as css-class prop to mjml elements', () => {
       </MjBody>
     </Mjml>,
   );
+
+  expect(screen.getByText('Hello world!').parentElement).toHaveClass('custom_text');
 
   expect(html).toMatchSnapshot();
 });
