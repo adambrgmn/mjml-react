@@ -4,7 +4,7 @@ import { KebabCasedProperties } from 'type-fest';
 
 import { MjmlComponent } from './types';
 
-function handleMjmlProps<T extends Record<string, unknown>>(props: T): KebabCasedProperties<T> {
+export function handleMjmlProps<T extends Record<string, unknown>>(props: T): KebabCasedProperties<T> {
   let converted: Record<string, unknown> = {};
   for (let [key, value] of Object.entries(props)) {
     converted[kebabCase(key)] = value;

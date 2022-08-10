@@ -193,34 +193,40 @@ export const Receipt: React.FC = () => {
             </Mjml.MjButton>
           </Mjml.MjColumn>
         </Mjml.MjSection>
-        <Mjml.MjSection backgroundColor="#356cc7" paddingBottom="5px" paddingTop="0px">
-          <Mjml.MjColumn width="100%">
-            <Mjml.MjDivider
-              borderColor="#ffffff"
-              borderWidth="2px"
-              borderStyle="solid"
-              paddingLeft="20px"
-              paddingRight="20px"
-              paddingBottom="0px"
-              paddingTop="0px"
-            />
-            <Mjml.MjText
-              align="center"
-              color="#FFF"
-              fontSize="15px"
-              fontFamily="Helvetica"
-              paddingLeft="25px"
-              paddingRight="25px"
-              paddingBottom="20px"
-              paddingTop="20px"
-            >
-              Best,
-              <br />
-              <span style={{ fontSize: '15px' }}>The [[CompanyName]] Team</span>
-            </Mjml.MjText>
-          </Mjml.MjColumn>
-        </Mjml.MjSection>
+        <Footer />
       </Mjml.MjBody>
     </Mjml.Mjml>
+  );
+};
+
+const Footer = () => {
+  return (
+    <Mjml.MjSection backgroundColor="#356cc7" paddingBottom="5px" paddingTop="0px">
+      <Mjml.MjColumn width="100%">
+        <Mjml.MjDivider
+          borderColor="#ffffff"
+          borderWidth="2px"
+          borderStyle="solid"
+          paddingLeft="20px"
+          paddingRight="20px"
+          paddingBottom="0px"
+          paddingTop="0px"
+        />
+        <Mjml.MjText
+          align="center"
+          color="#FFF"
+          fontSize="15px"
+          fontFamily="Helvetica"
+          paddingLeft="25px"
+          paddingRight="25px"
+          paddingBottom="20px"
+          paddingTop="20px"
+        >
+          Best,
+          <br />
+          <span style={{ fontSize: '15px' }}>The [[CompanyName]] Team</span>
+        </Mjml.MjText>
+      </Mjml.MjColumn>
+    </Mjml.MjSection>
   );
 };
