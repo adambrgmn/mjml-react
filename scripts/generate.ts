@@ -1,45 +1,21 @@
 import * as fs from 'node:fs';
 
-import _ from 'lodash';
+import { camelCase, upperFirst } from 'lodash-es';
 import 'mjml';
 import { components as mjmlComponents } from 'mjml-core';
+import prettier from 'prettier';
 
 import { PropsDocumentation, generatePropsDocumentation } from './generate-docs';
 
 (async () => {
   let sections: string[] = [];
 
-  let baseDeclarations = `
-import React from 'react';
+  let imports = `
+import { createComponent } from './create-component';
+import { MjUnit } from './types';
+`.trim();
 
-export type MjUnit<Suffix extends string> = \`\${number}\${Suffix}\`;
-
-export type MjmlBaseProps = {
-  /** class name, added to the root HTML element created */
-  className?: string;
-  /** class name, added to the root HTML element created */
-  'css-class'?: string
-  children?: React.ReactNode;
-}
-
-export type MjmlComponent<Props> = React.FC<Props & MjmlBaseProps>;
-
-function createComponent<Props>(Name: string): MjmlComponent<Props> {
-  const Component: MjmlComponent<Props> = ({ className, 'css-class': cssClass, children, ...rest }) => {
-    return (
-      // ${'@ts-expect-error'}
-      <Name {...rest} css-class={cssClass ?? className}>
-        {children}
-      </Name>
-    );
-  };
-  Component.displayName = Name;
-
-  return Component;
-}
-`;
-
-  sections.push(baseDeclarations);
+  sections.push(imports);
 
   let docs = await generatePropsDocumentation();
 
@@ -47,7 +23,7 @@ function createComponent<Props>(Name: string): MjmlComponent<Props> {
     if (component == null) continue;
 
     let props = buildProps((component as unknown as any).allowedAttributes ?? {}, docs[name]?.props ?? {});
-    let componentName = _.upperFirst(_.camelCase(name));
+    let componentName = upperFirst(camelCase(name));
 
     let def = `
 export type ${componentName}Props = ${props};
@@ -63,7 +39,9 @@ export let ${componentName} = createComponent<${componentName}Props>('${name}');
     sections.push(def);
   }
 
-  fs.writeFileSync('./src/components.tsx', sections.join('\n\n'));
+  let prettierConfig = JSON.parse(fs.readFileSync('./.prettierrc', 'utf-8'));
+  let code = prettier.format(sections.join('\n\n'), { parser: 'typescript', ...prettierConfig });
+  fs.writeFileSync('./src/components.tsx', code);
 })();
 
 function buildProps(attributes: Record<string, string>, docs: PropsDocumentation[string]['props']) {
@@ -78,14 +56,14 @@ function buildProps(attributes: Record<string, string>, docs: PropsDocumentation
 
     switch (rawType) {
       case 'boolean':
-        rows.push(`'${key}'?: boolean;`);
+        rows.push(`'${camelCase(key)}'?: boolean;`);
         break;
       case 'integer':
-        rows.push(`'${key}'?: number;`);
+        rows.push(`'${camelCase(key)}'?: number;`);
         break;
       case 'string':
       case 'color':
-        rows.push(`'${key}'?: string;`);
+        rows.push(`'${camelCase(key)}'?: string;`);
         break;
       case 'enum': {
         let values = type
@@ -95,7 +73,7 @@ function buildProps(attributes: Record<string, string>, docs: PropsDocumentation
           .map((v) => `'${v.trim()}'`)
           .join(' | ');
 
-        rows.push(`'${key}'?: ${values};`);
+        rows.push(`'${camelCase(key)}'?: ${values};`);
         break;
       }
       case 'unitWithNegative':
@@ -106,7 +84,7 @@ function buildProps(attributes: Record<string, string>, docs: PropsDocumentation
           .split(',')
           .map((u) => `'${u.trim()}'`)
           .join(' | ');
-        rows.push(`'${key}'?: MjUnit<${units}>;`);
+        rows.push(`'${camelCase(key)}'?: MjUnit<${units}>;`);
         break;
       }
       default:

@@ -64,8 +64,9 @@ it('is possible to supress throwing on validation errors', () => {
       line: 1,
       message: 'mj-text cannot be used inside mj-body, only inside: mj-attributes, mj-column, mj-hero',
       tagName: 'mj-text',
-      formattedMessage:
-        'Line 1 of /Users/adam.bergman/Developer/adambrgmn/mjml-react (mj-text) — mj-text cannot be used inside mj-body, only inside: mj-attributes, mj-column, mj-hero',
+      formattedMessage: expect.stringContaining(
+        'mj-text cannot be used inside mj-body, only inside: mj-attributes, mj-column, mj-hero',
+      ),
     },
   ]);
 });

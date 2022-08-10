@@ -19,10 +19,7 @@ export type RenderOptions = Omit<
   | 'useMjmlConfigOptions'
 >;
 
-export function render(
-  element: React.ReactElement<any, string | React.JSXElementConstructor<any>>,
-  options: RenderOptions = {},
-) {
+export function render(element: React.ReactElement, options: RenderOptions = {}) {
   let markup = renderToStaticMarkup(element);
   let { html, errors } = mjml(markup, {
     validationLevel: 'strict',
