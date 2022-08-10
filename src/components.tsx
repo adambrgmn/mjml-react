@@ -81,18 +81,6 @@ export type MjPreviewProps = {};
  */
 export let MjPreview = createComponent<MjPreviewProps>('mj-preview');
 
-export type MjStyleProps = {
-  /** set to "inline" to inline styles */
-  inline?: string;
-};
-
-/**
- * This tag allows you to set CSS styles that will be applied to the HTML in your MJML document as well as the HTML outputted. The CSS styles will be added to the head of the rendered HTML by default, but can also be inlined by using the inline="inline" attribute.
- *
- * @link https://documentation.mjml.io/#mj-style
- */
-export let MjStyle = createComponent<MjStyleProps>('mj-style');
-
 export type MjTitleProps = {};
 
 /**
