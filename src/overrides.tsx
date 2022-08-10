@@ -1,6 +1,8 @@
 /**
- * This file is for special case components that need some special handlng in the react context.
+ * This file is for special case components that need some special handling in the react context.
  */
+import React from 'react';
+
 import { handleMjmlProps } from './create-component';
 import { MjmlComponent } from './types';
 
@@ -17,9 +19,18 @@ export const MjAll: MjmlComponent<Record<string, string>> = (props) => {
   return <mj-all {...attributes} />;
 };
 
+/**
+ * mj-class tags create a named group of MJML attributes you can apply to MJML components.
+ * To apply them, use mj-class="<name>"
+ */
+export const MjClass: MjmlComponent<Record<string, string>> = ({ children, ...props }) => {
+  // @ts-expect-error
+  return <mj-class {...props} />;
+};
+
 export type MjStyleProps = {
   /** set to "inline" to inline styles */
-  inline?: 'inline';
+  inline?: boolean;
   /**
    * The style that will be inserted into the head of the document.
    *
@@ -49,7 +60,7 @@ export type MjStyleProps = {
  */
 export const MjStyle: MjmlComponent<MjStyleProps> = ({ inline, css }) => {
   // @ts-expect-error
-  return <mj-style inline={inline} dangerouslySetInnerHTML={{ __html: css }} />;
+  return <mj-style inline={inline ? 'inline' : undefined} dangerouslySetInnerHTML={{ __html: css }} />;
 };
 
 export function css(strings: TemplateStringsArray, ...values: string[]) {
