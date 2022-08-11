@@ -1,8 +1,8 @@
 import React from 'react';
 import { describe, expect, it } from 'vitest';
 
-import { MjAttributes, MjBody, MjColumn, MjHead, MjSection, MjText } from './components';
-import { MjAll, MjClass, MjStyle, css } from './overrides';
+import { MjAttributes, MjBody, MjColumn, MjHead, MjHtmlAttributes, MjSection, MjText } from './components';
+import { MjAll, MjClass, MjHtmlAttribute, MjSelector, MjStyle, css } from './overrides';
 import { Mjml } from './render';
 import { render, screen } from './test-utils';
 
@@ -110,5 +110,30 @@ describe('MjStyle', () => {
 
     expect(html).not.toContain('.link');
     expect(screen.getByText('Hello World!').parentElement).toHaveStyle({ color: 'blue' });
+  });
+});
+
+describe('MjHtmlAttributes', () => {
+  it('handles mjml html attributes elements correctly', () => {
+    render(
+      <Mjml>
+        <MjHead>
+          <MjHtmlAttributes>
+            <MjSelector path=".custom div">
+              <MjHtmlAttribute name="data-id">42</MjHtmlAttribute>
+            </MjSelector>
+          </MjHtmlAttributes>
+        </MjHead>
+        <MjBody>
+          <MjSection>
+            <MjColumn>
+              <MjText className="custom">Hello World!</MjText>
+            </MjColumn>
+          </MjSection>
+        </MjBody>
+      </Mjml>,
+    );
+
+    expect(screen.getByText('Hello World!')).toHaveAttribute('data-id', '42');
   });
 });

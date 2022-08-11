@@ -72,3 +72,34 @@ export function css(strings: TemplateStringsArray, ...values: string[]) {
 
   return str;
 }
+
+export type MjSelectorProps = {
+  /**
+   * In the generated html, a mj-text becomes a td, and a div inside this td. In this example, the
+   * td will have the class="custom". Using the css selector path=".custom div", the div inside the
+   * td will get the attribute data-id="42".
+   */
+  path: string;
+  children: React.ReactNode;
+};
+
+/**
+ * @link https://documentation.mjml.io/#mj-html-attributes
+ */
+export const MjSelector: MjmlComponent<MjSelectorProps> = ({ path, children }) => {
+  // @ts-expect-error
+  return <mj-selector path={path}>{children}</mj-selector>;
+};
+
+export type MjHtmlAttributeProps = {
+  name: string;
+  children: string;
+};
+
+/**
+ * @link https://documentation.mjml.io/#mj-html-attributes
+ */
+export const MjHtmlAttribute: MjmlComponent<MjHtmlAttributeProps> = ({ name, children }) => {
+  // @ts-expect-error
+  return <mj-html-attribute name={name}>{children}</mj-html-attribute>;
+};
