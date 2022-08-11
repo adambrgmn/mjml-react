@@ -4,7 +4,7 @@ import { KebabCasedProperties } from 'type-fest';
 
 import { MjmlComponent } from './types';
 
-export function handleMjmlProps<T extends Record<string, unknown>>(props: T): KebabCasedProperties<T> {
+export function handleMjmlProps<T extends Record<string, unknown>>(props: T) {
   let converted: Record<string, unknown> = {};
   for (let [key, value] of Object.entries(props)) {
     converted[kebabCase(key)] = value;
@@ -12,7 +12,7 @@ export function handleMjmlProps<T extends Record<string, unknown>>(props: T): Ke
   return converted as KebabCasedProperties<T>;
 }
 
-export function createComponent<Props extends Record<string, unknown>>(Name: string): MjmlComponent<Props> {
+export function createComponent<Props extends Record<string, unknown>>(Name: string) {
   const Component: MjmlComponent<Props> = ({ className, cssClass, children, ...rest }) => {
     let props = handleMjmlProps(rest);
     return (
