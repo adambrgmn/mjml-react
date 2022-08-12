@@ -1,17 +1,15 @@
-import React, { useContext } from 'react';
+import React from 'react';
 
-import { EndingTagContext } from './ending-tag-context';
+import { MjmlComponentWrapper } from './create-component';
 
 export const MjComment: React.FC<{ children: string }> = ({ children }) => {
-  let isInsideEndingTag = useContext(EndingTagContext);
-  if (isInsideEndingTag) {
-    throw new Error(
-      'Rendering a comment inside an ending tag is not supported. See https://documentation.mjml.io/#ending-tags for information about ending tags.',
-    );
-  }
-
-  // @ts-expect-error
-  return <mj-raw dangerouslySetInnerHTML={{ __html: `<!--${children}-->` }} />;
+  return (
+    <MjmlComponentWrapper name="comment" endingTag>
+      {/**
+       * @ts-expect-error */}
+      <mj-raw dangerouslySetInnerHTML={{ __html: `<!--${children}-->` }} />
+    </MjmlComponentWrapper>
+  );
 };
 
 export const MjConditionalTag: React.FC<{

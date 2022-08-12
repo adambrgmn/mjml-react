@@ -8,7 +8,7 @@ const HandlebarsTag: React.FC<{ tag: string; condition: string; children: React.
   condition,
   children,
 }) => {
-  let isInsideEndingTag = useContext(EndingTagContext);
+  let { isInsideEndingTag } = useContext(EndingTagContext);
 
   let start = `{{ #${tag} ${condition} }}`;
   let end = `{{ /${tag} }}`;
@@ -36,7 +36,7 @@ export const If: React.FC<{
 
 export const ElseIf: React.FC<{ condition: string; children: React.ReactNode }> = ({ condition, children }) => {
   let tag = `{{ else if ${condition} }}`;
-  let isInsideEndingTag = useContext(EndingTagContext);
+  let { isInsideEndingTag } = useContext(EndingTagContext);
   return (
     <Fragment>
       {isInsideEndingTag ? tag : <MjRaw>{tag}</MjRaw>}
@@ -47,7 +47,7 @@ export const ElseIf: React.FC<{ condition: string; children: React.ReactNode }> 
 
 export const Else: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   let tag = '{{ else }}';
-  let isInsideEndingTag = useContext(EndingTagContext);
+  let { isInsideEndingTag } = useContext(EndingTagContext);
   return (
     <Fragment>
       {isInsideEndingTag ? tag : <MjRaw>{tag}</MjRaw>}

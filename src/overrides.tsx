@@ -19,7 +19,7 @@ import { MjmlComponent } from './types';
  */
 export const MjRaw: MjmlComponent<{}> = ({ children }) => {
   return (
-    <MjmlComponentWrapper endingTag={true}>
+    <MjmlComponentWrapper name="mj-raw" endingTag={true}>
       {/*
       // @ts-expect-error */}
       <mj-raw>{children}</mj-raw>
@@ -39,7 +39,7 @@ export const MjAll: MjmlComponent<Record<string, string>> = (props) => {
   let attributes = handleMjmlProps(props);
 
   return (
-    <MjmlComponentWrapper endingTag={true}>
+    <MjmlComponentWrapper name="mj-all" endingTag={true}>
       {/*
       // @ts-expect-error */}
       <mj-all {...attributes} />
@@ -57,7 +57,7 @@ export const MjClass: MjmlComponent<Record<string, string>> = ({ children, ...pr
   let attributes = handleMjmlProps(props);
 
   return (
-    <MjmlComponentWrapper endingTag={true}>
+    <MjmlComponentWrapper name="mj-class" endingTag={true}>
       {/*
       // @ts-expect-error */}
       <mj-class {...attributes} />
@@ -97,7 +97,7 @@ export type MjStyleProps = {
  */
 export const MjStyle: MjmlComponent<MjStyleProps> = ({ inline, css }) => {
   return (
-    <MjmlComponentWrapper endingTag={true}>
+    <MjmlComponentWrapper name="mj-style" endingTag={true}>
       {/*
       // @ts-expect-error */}
       <mj-style inline={inline ? 'inline' : undefined} dangerouslySetInnerHTML={{ __html: css }} />
@@ -130,7 +130,7 @@ export type MjSelectorProps = {
  */
 export const MjSelector: MjmlComponent<MjSelectorProps> = ({ path, children }) => {
   return (
-    <MjmlComponentWrapper endingTag={false}>
+    <MjmlComponentWrapper name="mj-selector" endingTag={false}>
       {/*
       // @ts-expect-error */}
       <mj-selector path={path}>{children}</mj-selector>;
@@ -148,7 +148,7 @@ export type MjHtmlAttributeProps = {
  */
 export const MjHtmlAttribute: MjmlComponent<MjHtmlAttributeProps> = ({ name, children }) => {
   return (
-    <MjmlComponentWrapper endingTag={true}>
+    <MjmlComponentWrapper name="mj-html-attribute" endingTag={true}>
       {/*
       // @ts-expect-error */}
       <mj-html-attribute name={name}>{children}</mj-html-attribute>;

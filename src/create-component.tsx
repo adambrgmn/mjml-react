@@ -18,7 +18,7 @@ export function createComponent<Props extends Record<string, unknown>>(Name: str
     let props = handleMjmlProps(rest);
 
     return (
-      <MjmlComponentWrapper endingTag={endingTag}>
+      <MjmlComponentWrapper name={Name} endingTag={endingTag}>
         {/**
         // @ts-expect-error */}
         <Name {...props} css-class={cssClass ?? className}>
@@ -32,18 +32,26 @@ export function createComponent<Props extends Record<string, unknown>>(Name: str
   return Component;
 }
 
-export const MjmlComponentWrapper: React.FC<{ endingTag?: boolean; children: React.ReactNode }> = ({
-  endingTag,
+export const MjmlComponentWrapper: React.FC<{ name: string; endingTag?: boolean; children: React.ReactNode }> = ({
+  name,
+  endingTag = false,
   children,
 }) => {
-  let isInsideEndingTag = useContext(EndingTagContext);
+  let { isInsideEndingTag, component } = useContext(EndingTagContext);
   if (isInsideEndingTag) {
     throw new Error(
       `
 Rendering any mjml component inside another mjml component which is an ending tag is not supported.
+
+This error was thrown since \`${name}\` was rendered inside \`${component}\`.
+
 See https://documentation.mjml.io/#ending-tags for information about ending tags.`.trim(),
     );
   }
 
-  return <EndingTagContext.Provider value={endingTag ?? false}>{children}</EndingTagContext.Provider>;
+  return (
+    <EndingTagContext.Provider value={{ isInsideEndingTag: endingTag, component: name }}>
+      {children}
+    </EndingTagContext.Provider>
+  );
 };

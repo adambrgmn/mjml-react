@@ -112,5 +112,11 @@ it('throws an error if rendering any mj component inside another mj component en
         <MjRaw>Hello</MjRaw>
       </MjText>,
     ),
-  ).toThrow(/Rendering any mjml component inside another mjml component which is an ending tag is not supported/);
+  ).toThrowErrorMatchingInlineSnapshot(`
+    "Rendering any mjml component inside another mjml component which is an ending tag is not supported.
+
+    This error was thrown since \`mj-raw\` was rendered inside \`mj-text\`.
+
+    See https://documentation.mjml.io/#ending-tags for information about ending tags."
+  `);
 });

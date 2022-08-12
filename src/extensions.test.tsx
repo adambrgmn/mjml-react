@@ -41,5 +41,5 @@ it('does not work inside ending tags', () => {
         <MjComment>This is a comment</MjComment>
       </MjText>,
     ),
-  ).toThrowError(/Rendering a comment inside an ending tag is not supported/);
+  ).toThrowError(/Rendering any mjml component inside another mjml component which is an ending tag is not supported./);
 });
