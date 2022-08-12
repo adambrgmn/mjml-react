@@ -1,20 +1,22 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useContext } from 'react';
 
-import { MjRaw } from './components';
+import { EndingTagContext } from './ending-tag-context';
+import { MjRaw } from './overrides';
 
-const HandlebarsTag: React.FC<{ tag: string; condition: string; inline?: boolean; children: React.ReactNode }> = ({
+const HandlebarsTag: React.FC<{ tag: string; condition: string; children: React.ReactNode }> = ({
   tag,
   condition,
-  inline,
   children,
 }) => {
+  let isInsideEndingTag = useContext(EndingTagContext);
+
   let start = `{{ #${tag} ${condition} }}`;
   let end = `{{ /${tag} }}`;
   return (
     <Fragment>
-      {inline ? start : <MjRaw>{start}</MjRaw>}
+      {isInsideEndingTag ? start : <MjRaw>{start}</MjRaw>}
       {children}
-      {inline ? end : <MjRaw>{end}</MjRaw>}
+      {isInsideEndingTag ? end : <MjRaw>{end}</MjRaw>}
     </Fragment>
   );
 };
@@ -22,36 +24,33 @@ const HandlebarsTag: React.FC<{ tag: string; condition: string; inline?: boolean
 export const If: React.FC<{
   condition: string;
   else?: React.ReactNode;
-  inline?: boolean;
   children: React.ReactNode;
-}> = ({ condition, else: elseHandler, inline, children }) => {
+}> = ({ condition, else: elseHandler, children }) => {
   return (
-    <HandlebarsTag tag="if" condition={condition} inline={inline}>
+    <HandlebarsTag tag="if" condition={condition}>
       {children}
-      {elseHandler != null ? <Else inline={inline}>{elseHandler}</Else> : null}
+      {elseHandler != null ? <Else>{elseHandler}</Else> : null}
     </HandlebarsTag>
   );
 };
 
-export const ElseIf: React.FC<{ condition: string; inline?: boolean; children: React.ReactNode }> = ({
-  condition,
-  inline,
-  children,
-}) => {
+export const ElseIf: React.FC<{ condition: string; children: React.ReactNode }> = ({ condition, children }) => {
   let tag = `{{ else if ${condition} }}`;
+  let isInsideEndingTag = useContext(EndingTagContext);
   return (
     <Fragment>
-      {inline ? tag : <MjRaw>{tag}</MjRaw>}
+      {isInsideEndingTag ? tag : <MjRaw>{tag}</MjRaw>}
       {children}
     </Fragment>
   );
 };
 
-export const Else: React.FC<{ inline?: boolean; children: React.ReactNode }> = ({ inline, children }) => {
+export const Else: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   let tag = '{{ else }}';
+  let isInsideEndingTag = useContext(EndingTagContext);
   return (
     <Fragment>
-      {inline ? tag : <MjRaw>{tag}</MjRaw>}
+      {isInsideEndingTag ? tag : <MjRaw>{tag}</MjRaw>}
       {children}
     </Fragment>
   );
@@ -62,13 +61,12 @@ function createComparison(tag: string) {
     left: string;
     right: string;
     else?: React.ReactNode;
-    inline?: boolean;
     children: React.ReactNode;
-  }> = ({ left, right, else: elseHandler, inline, children }) => {
+  }> = ({ left, right, else: elseHandler, children }) => {
     return (
-      <HandlebarsTag tag={tag} condition={`${left} ${right}`} inline={inline}>
+      <HandlebarsTag tag={tag} condition={`${left} ${right}`}>
         {children}
-        {elseHandler != null ? <Else inline={inline}>{elseHandler}</Else> : null}
+        {elseHandler != null ? <Else>{elseHandler}</Else> : null}
       </HandlebarsTag>
     );
   };
@@ -86,13 +84,9 @@ export const NotEquals = createComparison('notEquals');
 export const And = createComparison('and');
 export const Or = createComparison('or');
 
-export const Each: React.FC<{ subject: string; inline?: boolean; children: React.ReactNode }> = ({
-  subject,
-  inline,
-  children,
-}) => {
+export const Each: React.FC<{ subject: string; children: React.ReactNode }> = ({ subject, children }) => {
   return (
-    <HandlebarsTag tag="each" condition={subject} inline={inline}>
+    <HandlebarsTag tag="each" condition={subject}>
       {children}
     </HandlebarsTag>
   );

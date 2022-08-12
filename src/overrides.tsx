@@ -1,16 +1,47 @@
 /**
  * This file is for special case components that need some special handling in the react context.
  */
-import React from 'react';
+import React, { useContext } from 'react';
 
 import { handleMjmlProps } from './create-component';
+import { EndingTagContext } from './ending-tag-context';
 import { MjmlComponent } from './types';
+
+/**
+ * Displays raw HTML that is not going to be parsed by the MJML engine. Anything left inside this tag
+ * should be raw, responsive HTML. If placed inside `<mj-head>`, its content will be added at the end
+ * of the `<head>`.
+ *
+ * If you use mj-raw to add templating language, and use the minify option, you might get a Parsing
+ * error, especially when using the < character. You can tell the minifier to ignore some content
+ * by wrapping it between two <!-- htmlmin:ignore --> tags.
+ *
+ * @link https://documentation.mjml.io/#mj-raw
+ */
+export const MjRaw: MjmlComponent<{}> = ({ children }) => {
+  let isEndingTag = useContext(EndingTagContext);
+  if (isEndingTag) {
+    throw new Error(
+      'Rendering mj-raw inside an ending tag is not supported. See https://documentation.mjml.io/#ending-tags for information about ending tags.',
+    );
+  }
+
+  return (
+    <EndingTagContext.Provider value={true}>
+      {/*
+      // @ts-expect-error */}
+      <mj-raw>{children}</mj-raw>
+    </EndingTagContext.Provider>
+  );
+};
 
 /**
  * Inside mj-attributes, a tag citing one MJML component (like mj-text; see example) overrides
  * default settings for listed MJML attributes on the one component.
  *
  * An `mj-all` is like the above, but affects all MJML components via the one tag.
+ *
+ * @link https://documentation.mjml.io/#mj-attributes
  */
 export const MjAll: MjmlComponent<Record<string, string>> = (props) => {
   let attributes = handleMjmlProps(props);
@@ -22,6 +53,8 @@ export const MjAll: MjmlComponent<Record<string, string>> = (props) => {
 /**
  * mj-class tags create a named group of MJML attributes you can apply to MJML components.
  * To apply them, use mj-class="<name>"
+ *
+ * @link https://documentation.mjml.io/#mj-attributes
  */
 export const MjClass: MjmlComponent<Record<string, string>> = ({ children, ...props }) => {
   // @ts-expect-error

@@ -2,9 +2,31 @@ import React from 'react';
 import { describe, expect, it } from 'vitest';
 
 import { MjAttributes, MjBody, MjColumn, MjHead, MjHtmlAttributes, MjSection, MjText } from './components';
-import { MjAll, MjClass, MjHtmlAttribute, MjSelector, MjStyle, css } from './overrides';
+import { MjAll, MjClass, MjHtmlAttribute, MjRaw, MjSelector, MjStyle, css } from './overrides';
 import { Mjml } from './render';
 import { render, screen } from './test-utils';
+
+describe('MjRaw', () => {
+  it('fails when rendered inside another ending tag', () => {
+    expect(() => {
+      render(
+        <Mjml>
+          <MjBody>
+            <MjSection>
+              <MjColumn>
+                <MjText>
+                  <MjRaw>Hello</MjRaw>
+                </MjText>
+              </MjColumn>
+            </MjSection>
+          </MjBody>
+        </Mjml>,
+      );
+    }).toThrowError(
+      /Rendering mj-raw inside an ending tag is not supported. See https:\/\/documentation.mjml.io\/#ending-tags for information about ending tags./,
+    );
+  });
+});
 
 describe('MjAll', () => {
   it('applies props to all elements', () => {

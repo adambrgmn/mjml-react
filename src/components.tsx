@@ -11,27 +11,29 @@ export type MjBodyProps = {
 /**
  * This is the starting point of your email.
  *
+ * This component is not an [ending tag](https://documentation.mjml.io/#ending-tags).
+ *
  * @link https://documentation.mjml.io/#mj-body
  */
-export let MjBody = createComponent<MjBodyProps>('mj-body');
+export let MjBody = createComponent<MjBodyProps>('mj-body', false);
 
 export type MjHeadProps = {};
 
 /**
- *
+ * This component is not an [ending tag](https://documentation.mjml.io/#ending-tags).
  *
  * @link https://documentation.mjml.io/#mj-head
  */
-export let MjHead = createComponent<MjHeadProps>('mj-head');
+export let MjHead = createComponent<MjHeadProps>('mj-head', false);
 
 export type MjAttributesProps = {};
 
 /**
- *
+ * This component is not an [ending tag](https://documentation.mjml.io/#ending-tags).
  *
  * @link https://documentation.mjml.io/#mj-attributes
  */
-export let MjAttributes = createComponent<MjAttributesProps>('mj-attributes');
+export let MjAttributes = createComponent<MjAttributesProps>('mj-attributes', false);
 
 export type MjBreakpointProps = {
   /** breakpoint's value */
@@ -41,18 +43,20 @@ export type MjBreakpointProps = {
 /**
  * This tag allows you to control on which breakpoint the layout should go desktop/mobile.
  *
+ * This component is an [ending tag](https://documentation.mjml.io/#ending-tags).
+ *
  * @link https://documentation.mjml.io/#mj-breakpoint
  */
-export let MjBreakpoint = createComponent<MjBreakpointProps>('mj-breakpoint');
+export let MjBreakpoint = createComponent<MjBreakpointProps>('mj-breakpoint', true);
 
 export type MjHtmlAttributesProps = {};
 
 /**
- *
+ * This component is not an [ending tag](https://documentation.mjml.io/#ending-tags).
  *
  * @link https://documentation.mjml.io/#mj-html-attributes
  */
-export let MjHtmlAttributes = createComponent<MjHtmlAttributesProps>('mj-html-attributes');
+export let MjHtmlAttributes = createComponent<MjHtmlAttributesProps>('mj-html-attributes', false);
 
 export type MjFontProps = {
   /** name of the font */
@@ -68,27 +72,29 @@ export type MjFontProps = {
  * Example: https://fonts
  * .googleapis.com/css?family=Raleway
  *
+ * This component is not an [ending tag](https://documentation.mjml.io/#ending-tags).
+ *
  * @link https://documentation.mjml.io/#mj-font
  */
-export let MjFont = createComponent<MjFontProps>('mj-font');
+export let MjFont = createComponent<MjFontProps>('mj-font', false);
 
 export type MjPreviewProps = {};
 
 /**
- *
+ * This component is an [ending tag](https://documentation.mjml.io/#ending-tags).
  *
  * @link https://documentation.mjml.io/#mj-preview
  */
-export let MjPreview = createComponent<MjPreviewProps>('mj-preview');
+export let MjPreview = createComponent<MjPreviewProps>('mj-preview', true);
 
 export type MjTitleProps = {};
 
 /**
- *
+ * This component is an [ending tag](https://documentation.mjml.io/#ending-tags).
  *
  * @link https://documentation.mjml.io/#mj-title
  */
-export let MjTitle = createComponent<MjTitleProps>('mj-title');
+export let MjTitle = createComponent<MjTitleProps>('mj-title', true);
 
 export type MjHeroProps = {
   /** choose if the height is fixed based on the height attribute or fluid */
@@ -132,9 +138,11 @@ export type MjHeroProps = {
  * This element displays a hero image.
  * It behaves like an mj-section with a single mj-column.
  *
+ * This component is not an [ending tag](https://documentation.mjml.io/#ending-tags).
+ *
  * @link https://documentation.mjml.io/#mj-hero
  */
-export let MjHero = createComponent<MjHeroProps>('mj-hero');
+export let MjHero = createComponent<MjHeroProps>('mj-hero', false);
 
 export type MjButtonProps = {
   /** horizontal alignment */
@@ -205,11 +213,11 @@ export type MjButtonProps = {
 };
 
 /**
- *
+ * This component is an [ending tag](https://documentation.mjml.io/#ending-tags).
  *
  * @link https://documentation.mjml.io/#mj-button
  */
-export let MjButton = createComponent<MjButtonProps>('mj-button');
+export let MjButton = createComponent<MjButtonProps>('mj-button', true);
 
 export type MjColumnProps = {
   /** background color for a column */
@@ -261,9 +269,11 @@ export type MjColumnProps = {
  * Columns enable you to horizontally organize the content within your sections. They must be located under mj-section tags in order to be considered by the engine.
  * To be responsive, columns are expressed in terms of percentage.
  *
+ * This component is not an [ending tag](https://documentation.mjml.io/#ending-tags).
+ *
  * @link https://documentation.mjml.io/#mj-column
  */
-export let MjColumn = createComponent<MjColumnProps>('mj-column');
+export let MjColumn = createComponent<MjColumnProps>('mj-column', false);
 
 export type MjDividerProps = {
   /** divider color */
@@ -293,9 +303,11 @@ export type MjDividerProps = {
 /**
  * Displays a horizontal divider that can be customized like a HTML border.
  *
+ * This component is not an [ending tag](https://documentation.mjml.io/#ending-tags).
+ *
  * @link https://documentation.mjml.io/#mj-divider
  */
-export let MjDivider = createComponent<MjDividerProps>('mj-divider');
+export let MjDivider = createComponent<MjDividerProps>('mj-divider', false);
 
 export type MjGroupProps = {
   /** background color for a group */
@@ -309,11 +321,11 @@ export type MjGroupProps = {
 };
 
 /**
- *
+ * This component is not an [ending tag](https://documentation.mjml.io/#ending-tags).
  *
  * @link https://documentation.mjml.io/#mj-group
  */
-export let MjGroup = createComponent<MjGroupProps>('mj-group');
+export let MjGroup = createComponent<MjGroupProps>('mj-group', false);
 
 export type MjImageProps = {
   /** image description */
@@ -376,20 +388,11 @@ export type MjImageProps = {
  * Displays a responsive image in your email. It is similar to the HTML <img /> tag.
  * Note that if no width is provided, the image will use the parent column width.
  *
+ * This component is not an [ending tag](https://documentation.mjml.io/#ending-tags).
+ *
  * @link https://documentation.mjml.io/#mj-image
  */
-export let MjImage = createComponent<MjImageProps>('mj-image');
-
-export type MjRawProps = {
-  position?: 'file-start';
-};
-
-/**
- *
- *
- * @link https://documentation.mjml.io/#mj-raw
- */
-export let MjRaw = createComponent<MjRawProps>('mj-raw');
+export let MjImage = createComponent<MjImageProps>('mj-image', false);
 
 export type MjSectionProps = {
   /** section color */
@@ -441,9 +444,11 @@ export type MjSectionProps = {
  * Sections are intended to be used as rows within your email.
  * They will be used to structure the layout.
  *
+ * This component is not an [ending tag](https://documentation.mjml.io/#ending-tags).
+ *
  * @link https://documentation.mjml.io/#mj-section
  */
-export let MjSection = createComponent<MjSectionProps>('mj-section');
+export let MjSection = createComponent<MjSectionProps>('mj-section', false);
 
 export type MjSpacerProps = {
   border?: string;
@@ -470,9 +475,11 @@ export type MjSpacerProps = {
 /**
  * Displays a blank space.
  *
+ * This component is not an [ending tag](https://documentation.mjml.io/#ending-tags).
+ *
  * @link https://documentation.mjml.io/#mj-spacer
  */
-export let MjSpacer = createComponent<MjSpacerProps>('mj-spacer');
+export let MjSpacer = createComponent<MjSpacerProps>('mj-spacer', false);
 
 export type MjTextProps = {
   /** left/right/center/justify */
@@ -516,9 +523,11 @@ export type MjTextProps = {
 /**
  * This tag allows you to display text in your email.
  *
+ * This component is an [ending tag](https://documentation.mjml.io/#ending-tags).
+ *
  * @link https://documentation.mjml.io/#mj-text
  */
-export let MjText = createComponent<MjTextProps>('mj-text');
+export let MjText = createComponent<MjTextProps>('mj-text', true);
 
 export type MjTableProps = {
   /** self horizontal alignment */
@@ -562,9 +571,11 @@ export type MjTableProps = {
 /**
  * This tag allows you to display table and filled it with data. It only accepts plain HTML.
  *
+ * This component is an [ending tag](https://documentation.mjml.io/#ending-tags).
+ *
  * @link https://documentation.mjml.io/#mj-table
  */
-export let MjTable = createComponent<MjTableProps>('mj-table');
+export let MjTable = createComponent<MjTableProps>('mj-table', true);
 
 export type MjWrapperProps = {
   /** section color */
@@ -612,11 +623,11 @@ export type MjWrapperProps = {
 };
 
 /**
- *
+ * This component is not an [ending tag](https://documentation.mjml.io/#ending-tags).
  *
  * @link https://documentation.mjml.io/#mj-wrapper
  */
-export let MjWrapper = createComponent<MjWrapperProps>('mj-wrapper');
+export let MjWrapper = createComponent<MjWrapperProps>('mj-wrapper', false);
 
 export type MjSocialProps = {
   /** left/right/center */
@@ -666,11 +677,11 @@ export type MjSocialProps = {
 };
 
 /**
- *
+ * This component is not an [ending tag](https://documentation.mjml.io/#ending-tags).
  *
  * @link https://documentation.mjml.io/#mj-social
  */
-export let MjSocial = createComponent<MjSocialProps>('mj-social');
+export let MjSocial = createComponent<MjSocialProps>('mj-social', false);
 
 export type MjSocialElementProps = {
   align?: 'left' | 'center' | 'right';
@@ -705,11 +716,11 @@ export type MjSocialElementProps = {
 };
 
 /**
- *
+ * This component is an [ending tag](https://documentation.mjml.io/#ending-tags).
  *
  * @link https://documentation.mjml.io/#mj-social-element
  */
-export let MjSocialElement = createComponent<MjSocialElementProps>('mj-social-element');
+export let MjSocialElement = createComponent<MjSocialElementProps>('mj-social-element', true);
 
 export type MjNavbarProps = {
   /** align content left/center/right */
@@ -753,11 +764,11 @@ export type MjNavbarProps = {
 };
 
 /**
- *
+ * This component is not an [ending tag](https://documentation.mjml.io/#ending-tags).
  *
  * @link https://documentation.mjml.io/#mj-navbar
  */
-export let MjNavbar = createComponent<MjNavbarProps>('mj-navbar');
+export let MjNavbar = createComponent<MjNavbarProps>('mj-navbar', false);
 
 export type MjNavbarLinkProps = {
   color?: string;
@@ -781,11 +792,11 @@ export type MjNavbarLinkProps = {
 };
 
 /**
- *
+ * This component is an [ending tag](https://documentation.mjml.io/#ending-tags).
  *
  * @link https://documentation.mjml.io/#mj-navbar-link
  */
-export let MjNavbarLink = createComponent<MjNavbarLinkProps>('mj-navbar-link');
+export let MjNavbarLink = createComponent<MjNavbarLinkProps>('mj-navbar-link', true);
 
 export type MjAccordionProps = {
   /** background-color of the cell */
@@ -823,11 +834,11 @@ export type MjAccordionProps = {
 };
 
 /**
- *
+ * This component is not an [ending tag](https://documentation.mjml.io/#ending-tags).
  *
  * @link https://documentation.mjml.io/#mj-accordion
  */
-export let MjAccordion = createComponent<MjAccordionProps>('mj-accordion');
+export let MjAccordion = createComponent<MjAccordionProps>('mj-accordion', false);
 
 export type MjAccordionElementProps = {
   backgroundColor?: string;
@@ -844,11 +855,11 @@ export type MjAccordionElementProps = {
 };
 
 /**
- *
+ * This component is not an [ending tag](https://documentation.mjml.io/#ending-tags).
  *
  * @link https://documentation.mjml.io/#mj-accordion-element
  */
-export let MjAccordionElement = createComponent<MjAccordionElementProps>('mj-accordion-element');
+export let MjAccordionElement = createComponent<MjAccordionElementProps>('mj-accordion-element', false);
 
 export type MjAccordionTextProps = {
   backgroundColor?: string;
@@ -866,11 +877,11 @@ export type MjAccordionTextProps = {
 };
 
 /**
- *
+ * This component is an [ending tag](https://documentation.mjml.io/#ending-tags).
  *
  * @link https://documentation.mjml.io/#mj-accordion-text
  */
-export let MjAccordionText = createComponent<MjAccordionTextProps>('mj-accordion-text');
+export let MjAccordionText = createComponent<MjAccordionTextProps>('mj-accordion-text', true);
 
 export type MjAccordionTitleProps = {
   backgroundColor?: string;
@@ -885,11 +896,11 @@ export type MjAccordionTitleProps = {
 };
 
 /**
- *
+ * This component is an [ending tag](https://documentation.mjml.io/#ending-tags).
  *
  * @link https://documentation.mjml.io/#mj-accordion-title
  */
-export let MjAccordionTitle = createComponent<MjAccordionTitleProps>('mj-accordion-title');
+export let MjAccordionTitle = createComponent<MjAccordionTitleProps>('mj-accordion-title', true);
 
 export type MjCarouselProps = {
   /** horizontal alignment */
@@ -924,11 +935,11 @@ export type MjCarouselProps = {
 };
 
 /**
- *
+ * This component is not an [ending tag](https://documentation.mjml.io/#ending-tags).
  *
  * @link https://documentation.mjml.io/#mj-carousel
  */
-export let MjCarousel = createComponent<MjCarouselProps>('mj-carousel');
+export let MjCarousel = createComponent<MjCarouselProps>('mj-carousel', false);
 
 export type MjCarouselImageProps = {
   alt?: string;
@@ -944,8 +955,8 @@ export type MjCarouselImageProps = {
 };
 
 /**
- *
+ * This component is an [ending tag](https://documentation.mjml.io/#ending-tags).
  *
  * @link https://documentation.mjml.io/#mj-carousel-image
  */
-export let MjCarouselImage = createComponent<MjCarouselImageProps>('mj-carousel-image');
+export let MjCarouselImage = createComponent<MjCarouselImageProps>('mj-carousel-image', true);

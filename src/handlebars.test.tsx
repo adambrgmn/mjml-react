@@ -6,6 +6,7 @@ import { expect, it } from 'vitest';
 
 import { MjBody, MjColumn, MjSection, MjText } from './components';
 import * as Hbs from './handlebars';
+import { MjRaw } from './overrides';
 import { Mjml } from './render';
 import { render, screen } from './test-utils';
 
@@ -34,7 +35,7 @@ it('can render handlebar statements inside "ending tags" without breaking semant
         <MjSection>
           <MjColumn>
             <MjText className="test_container">
-              <Hbs.If condition="user.name" inline>
+              <Hbs.If condition="user.name">
                 <span>Hello {'{{ user.name }}'}!</span>
               </Hbs.If>
             </MjText>
@@ -64,15 +65,15 @@ it('provides else/else if possibilities', () => {
         <MjSection>
           <MjColumn>
             <MjText className="test_container">
-              <Hbs.If condition="user.name" inline>
+              <Hbs.If condition="user.name">
                 <span>Hello {'{{ user.name }}'}!</span>
-                <Hbs.ElseIf condition="user.age" inline>
+                <Hbs.ElseIf condition="user.age">
                   <span>You are {'{{ user.age }}'} years old!</span>
                 </Hbs.ElseIf>
                 <Hbs.ElseIf condition="user.length">
                   <span>You are {'{{ user.length }}'} cm long!</span>
                 </Hbs.ElseIf>
-                <Hbs.Else inline>
+                <Hbs.Else>
                   <span>You are not a human!</span>
                 </Hbs.Else>
               </Hbs.If>
@@ -95,9 +96,7 @@ it('provides else/else if possibilities', () => {
       <span>
         You are {{ user.age }} years old!
       </span>
-      <mj-raw>
-        {{ else if user.length }}
-      </mj-raw>
+      {{ else if user.length }}
       <span>
         You are {{ user.length }} cm long!
       </span>
@@ -128,9 +127,11 @@ it('provides multiple different conditionals', () => {
       <Hbs.NotEquals left="foo" right="bar">
         This is true
       </Hbs.NotEquals>
-      <Hbs.And left="foo" right="bar" inline>
-        This is true
-      </Hbs.And>
+      <MjRaw>
+        <Hbs.And left="foo" right="bar">
+          This is true
+        </Hbs.And>
+      </MjRaw>
       <Hbs.Or left="foo" right="bar" else="This is false">
         This is true
       </Hbs.Or>
@@ -154,7 +155,7 @@ it('provides multiple different conditionals', () => {
       <mj-raw>{{ #notEquals foo bar }}</mj-raw>
       This is true
       <mj-raw>{{ /notEquals }}</mj-raw>
-      {{ #and foo bar }}This is true{{ /and }}
+      <mj-raw>{{ #and foo bar }}This is true{{ /and }}</mj-raw>
       <mj-raw>{{ #or foo bar }}</mj-raw>
       This is true
       <mj-raw>{{ else }}</mj-raw>
@@ -171,9 +172,11 @@ it('is possible to render an each block', () => {
       <Hbs.Each subject="users">
         <MjText>{'{{ this.name }}'}</MjText>
       </Hbs.Each>
-      <Hbs.Each subject="users" inline>
-        <span>{'{{ this.name }}'}</span>
-      </Hbs.Each>
+      <MjText>
+        <Hbs.Each subject="users">
+          <span>{'{{ this.name }}'}</span>
+        </Hbs.Each>
+      </MjText>
     </Mjml>,
   );
 
@@ -182,9 +185,11 @@ it('is possible to render an each block', () => {
       <mj-raw>{{ #each users }}</mj-raw>
       <mj-text>{{ this.name }}</mj-text>
       <mj-raw>{{ /each }}</mj-raw>
-      {{ #each users }}
-      <span>{{ this.name }}</span>
-      {{ /each }}
+      <mj-text>
+        {{ #each users }}
+        <span>{{ this.name }}</span>
+        {{ /each }}
+      </mj-text>
     </mjml>
     "
   `);

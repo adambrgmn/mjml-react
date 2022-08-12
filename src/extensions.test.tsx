@@ -3,7 +3,7 @@ import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { expect, it } from 'vitest';
 
-import { MjBody } from './components';
+import { MjBody, MjText } from './components';
 import { MjComment, MjConditionalTag } from './extensions';
 import { Mjml } from './render';
 
@@ -31,4 +31,15 @@ it('is possible to render html comments', () => {
   );
 
   expect(html).toMatchInlineSnapshot('"<mjml><mj-body><mj-raw><!--Hello world!--></mj-raw></mj-body></mjml>"');
+});
+
+it('does not work inside ending tags', () => {
+  expect(() =>
+    renderToStaticMarkup(
+      <MjText>
+        Hello World!
+        <MjComment>This is a comment</MjComment>
+      </MjText>,
+    ),
+  ).toThrowError(/Rendering a comment inside an ending tag is not supported/);
 });
