@@ -3,8 +3,8 @@ import React, { useContext } from 'react';
 import { EndingTagContext } from './ending-tag-context';
 
 export const MjComment: React.FC<{ children: string }> = ({ children }) => {
-  let isEndingTag = useContext(EndingTagContext);
-  if (isEndingTag) {
+  let isInsideEndingTag = useContext(EndingTagContext);
+  if (isInsideEndingTag) {
     throw new Error(
       'Rendering a comment inside an ending tag is not supported. See https://documentation.mjml.io/#ending-tags for information about ending tags.',
     );

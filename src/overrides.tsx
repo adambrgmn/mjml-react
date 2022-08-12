@@ -1,10 +1,9 @@
 /**
  * This file is for special case components that need some special handling in the react context.
  */
-import React, { useContext } from 'react';
+import React from 'react';
 
-import { handleMjmlProps } from './create-component';
-import { EndingTagContext } from './ending-tag-context';
+import { MjmlComponentWrapper, handleMjmlProps } from './create-component';
 import { MjmlComponent } from './types';
 
 /**
@@ -19,19 +18,12 @@ import { MjmlComponent } from './types';
  * @link https://documentation.mjml.io/#mj-raw
  */
 export const MjRaw: MjmlComponent<{}> = ({ children }) => {
-  let isEndingTag = useContext(EndingTagContext);
-  if (isEndingTag) {
-    throw new Error(
-      'Rendering mj-raw inside an ending tag is not supported. See https://documentation.mjml.io/#ending-tags for information about ending tags.',
-    );
-  }
-
   return (
-    <EndingTagContext.Provider value={true}>
+    <MjmlComponentWrapper endingTag={true}>
       {/*
       // @ts-expect-error */}
       <mj-raw>{children}</mj-raw>
-    </EndingTagContext.Provider>
+    </MjmlComponentWrapper>
   );
 };
 
@@ -46,8 +38,13 @@ export const MjRaw: MjmlComponent<{}> = ({ children }) => {
 export const MjAll: MjmlComponent<Record<string, string>> = (props) => {
   let attributes = handleMjmlProps(props);
 
-  // @ts-expect-error
-  return <mj-all {...attributes} />;
+  return (
+    <MjmlComponentWrapper endingTag={true}>
+      {/*
+      // @ts-expect-error */}
+      <mj-all {...attributes} />
+    </MjmlComponentWrapper>
+  );
 };
 
 /**
@@ -57,8 +54,15 @@ export const MjAll: MjmlComponent<Record<string, string>> = (props) => {
  * @link https://documentation.mjml.io/#mj-attributes
  */
 export const MjClass: MjmlComponent<Record<string, string>> = ({ children, ...props }) => {
-  // @ts-expect-error
-  return <mj-class {...props} />;
+  let attributes = handleMjmlProps(props);
+
+  return (
+    <MjmlComponentWrapper endingTag={true}>
+      {/*
+      // @ts-expect-error */}
+      <mj-class {...attributes} />
+    </MjmlComponentWrapper>
+  );
 };
 
 export type MjStyleProps = {
@@ -92,8 +96,13 @@ export type MjStyleProps = {
  * @link https://documentation.mjml.io/#mj-style
  */
 export const MjStyle: MjmlComponent<MjStyleProps> = ({ inline, css }) => {
-  // @ts-expect-error
-  return <mj-style inline={inline ? 'inline' : undefined} dangerouslySetInnerHTML={{ __html: css }} />;
+  return (
+    <MjmlComponentWrapper endingTag={true}>
+      {/*
+      // @ts-expect-error */}
+      <mj-style inline={inline ? 'inline' : undefined} dangerouslySetInnerHTML={{ __html: css }} />
+    </MjmlComponentWrapper>
+  );
 };
 
 export function css(strings: TemplateStringsArray, ...values: string[]) {
@@ -120,8 +129,13 @@ export type MjSelectorProps = {
  * @link https://documentation.mjml.io/#mj-html-attributes
  */
 export const MjSelector: MjmlComponent<MjSelectorProps> = ({ path, children }) => {
-  // @ts-expect-error
-  return <mj-selector path={path}>{children}</mj-selector>;
+  return (
+    <MjmlComponentWrapper endingTag={false}>
+      {/*
+      // @ts-expect-error */}
+      <mj-selector path={path}>{children}</mj-selector>;
+    </MjmlComponentWrapper>
+  );
 };
 
 export type MjHtmlAttributeProps = {
@@ -133,6 +147,11 @@ export type MjHtmlAttributeProps = {
  * @link https://documentation.mjml.io/#mj-html-attributes
  */
 export const MjHtmlAttribute: MjmlComponent<MjHtmlAttributeProps> = ({ name, children }) => {
-  // @ts-expect-error
-  return <mj-html-attribute name={name}>{children}</mj-html-attribute>;
+  return (
+    <MjmlComponentWrapper endingTag={true}>
+      {/*
+      // @ts-expect-error */}
+      <mj-html-attribute name={name}>{children}</mj-html-attribute>;
+    </MjmlComponentWrapper>
+  );
 };

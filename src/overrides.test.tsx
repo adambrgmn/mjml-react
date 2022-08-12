@@ -23,7 +23,7 @@ describe('MjRaw', () => {
         </Mjml>,
       );
     }).toThrowError(
-      /Rendering mj-raw inside an ending tag is not supported. See https:\/\/documentation.mjml.io\/#ending-tags for information about ending tags./,
+      /Rendering any mjml component inside another mjml component which is an ending tag is not supported/,
     );
   });
 });

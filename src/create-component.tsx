@@ -17,21 +17,33 @@ export function createComponent<Props extends Record<string, unknown>>(Name: str
   const Component: MjmlComponent<Props> = ({ className, cssClass, children, ...rest }) => {
     let props = handleMjmlProps(rest);
 
-    let isEndingTag = useContext(EndingTagContext);
-    if (isEndingTag) {
-      throw new Error(
-        `Rendering any mjml component inside another ending tag is not supported. See https://documentation.mjml.io/#ending-tags for information about ending tags.`,
-      );
-    }
-
     return (
-      // @ts-expect-error
-      <Name {...props} css-class={cssClass ?? className}>
-        <EndingTagContext.Provider value={endingTag}>{children}</EndingTagContext.Provider>
-      </Name>
+      <MjmlComponentWrapper endingTag={endingTag}>
+        {/**
+        // @ts-expect-error */}
+        <Name {...props} css-class={cssClass ?? className}>
+          {children}
+        </Name>
+      </MjmlComponentWrapper>
     );
   };
   Component.displayName = Name;
 
   return Component;
 }
+
+export const MjmlComponentWrapper: React.FC<{ endingTag?: boolean; children: React.ReactNode }> = ({
+  endingTag,
+  children,
+}) => {
+  let isInsideEndingTag = useContext(EndingTagContext);
+  if (isInsideEndingTag) {
+    throw new Error(
+      `
+Rendering any mjml component inside another mjml component which is an ending tag is not supported.
+See https://documentation.mjml.io/#ending-tags for information about ending tags.`.trim(),
+    );
+  }
+
+  return <EndingTagContext.Provider value={endingTag ?? false}>{children}</EndingTagContext.Provider>;
+};
