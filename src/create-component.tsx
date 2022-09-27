@@ -2,6 +2,7 @@ import { kebabCase } from 'lodash-es';
 import React, { useContext } from 'react';
 import { KebabCasedProperties } from 'type-fest';
 
+import { cx } from './cx';
 import { EndingTagContext } from './ending-tag-context';
 import { MjmlComponent } from './types';
 
@@ -21,7 +22,7 @@ export function createComponent<Props extends Record<string, unknown>>(Name: str
       <MjmlComponentWrapper name={Name} endingTag={endingTag}>
         {/**
         // @ts-expect-error */}
-        <Name {...props} css-class={cssClass ?? className}>
+        <Name {...props} css-class={cx(className, cssClass)}>
           {children}
         </Name>
       </MjmlComponentWrapper>

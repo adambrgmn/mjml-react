@@ -521,7 +521,7 @@ export type MjTextProps = {
 };
 
 /**
- * This tag allows you to display text in your email.
+ * This tag allows you to display text and HTML in your email.
  *
  * This component is an [ending tag](https://documentation.mjml.io/#ending-tags).
  *
