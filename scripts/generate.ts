@@ -8,7 +8,7 @@ import prettier from 'prettier';
 import { PropsDocumentation, generatePropsDocumentation } from './generate-docs';
 
 // These components require special treatment and are overridden in src/overrides.tsx
-const ignored = ['mj-class', 'mj-all', 'mj-style'];
+const ignored = ['mj-class', 'mj-all', 'mj-style', 'mj-raw'];
 
 (async () => {
   let sections: string[] = [];
@@ -29,16 +29,21 @@ import { MjUnit } from './types';
 
     let props = buildProps((component as unknown as any).allowedAttributes ?? {}, docs[name]?.props ?? {});
     let componentName = upperFirst(camelCase(name));
+    let endingTag = (component as unknown as any).endingTag ?? false;
+
+    let comments = [
+      (docs[name]?.description ?? '').split('\n').join('\n * '),
+      `This component is${endingTag ? '' : ' not'} an [ending tag](https://documentation.mjml.io/#ending-tags).`,
+      `@link https://documentation.mjml.io/#${name}`,
+    ].filter((c) => c.length > 0);
 
     let def = `
 export type ${componentName}Props = ${props};
 
 /**
- * ${(docs[name]?.description ?? '').split('\n').join('\n * ')}
- *
- * @link https://documentation.mjml.io/#${name}
+ * ${comments.join('\n * \n * ')}
  */
-export let ${componentName} = createComponent<${componentName}Props>('${name}');
+export let ${componentName} = createComponent<${componentName}Props>('${name}', ${endingTag ? 'true' : 'false'});
   `.trim();
 
     sections.push(def);

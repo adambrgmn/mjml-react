@@ -1,7 +1,9 @@
 import React from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { expect, it } from 'vitest';
 
 import { MjBody, MjColumn, MjSection, MjText } from './components';
+import { MjRaw } from './overrides';
 import { Mjml } from './render';
 import { render, screen } from './test-utils';
 
@@ -101,4 +103,20 @@ it('applies className as css-class prop to mjml elements', () => {
   expect(screen.getByText('Hello world!').parentElement).toHaveClass('custom_text');
 
   expect(html).toMatchSnapshot();
+});
+
+it('throws an error if rendering any mj component inside another mj component ending tag', () => {
+  expect(() =>
+    renderToStaticMarkup(
+      <MjText>
+        <MjRaw>Hello</MjRaw>
+      </MjText>,
+    ),
+  ).toThrowErrorMatchingInlineSnapshot(`
+    "Rendering any mjml component inside another mjml component which is an ending tag is not supported.
+
+    This error was thrown since \`mj-raw\` was rendered inside \`mj-text\`.
+
+    See https://documentation.mjml.io/#ending-tags for information about ending tags."
+  `);
 });

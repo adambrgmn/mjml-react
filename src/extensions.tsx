@@ -1,8 +1,15 @@
 import React from 'react';
 
+import { MjmlComponentWrapper } from './create-component';
+
 export const MjComment: React.FC<{ children: string }> = ({ children }) => {
-  // @ts-expect-error
-  return <mj-raw dangerouslySetInnerHTML={{ __html: `<!--${children}-->` }} />;
+  return (
+    <MjmlComponentWrapper name="comment" endingTag>
+      {/**
+       * @ts-expect-error */}
+      <mj-raw dangerouslySetInnerHTML={{ __html: `<!--${children}-->` }} />
+    </MjmlComponentWrapper>
+  );
 };
 
 export const MjConditionalTag: React.FC<{

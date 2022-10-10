@@ -1,10 +1,12 @@
 import { kebabCase } from 'lodash-es';
-import React from 'react';
+import React, { useContext } from 'react';
 import { KebabCasedProperties } from 'type-fest';
 
+import { cx } from './cx';
+import { EndingTagContext } from './ending-tag-context';
 import { MjmlComponent } from './types';
 
-export function handleMjmlProps<T extends Record<string, unknown>>(props: T): KebabCasedProperties<T> {
+export function handleMjmlProps<T extends Record<string, unknown>>(props: T) {
   let converted: Record<string, unknown> = {};
   for (let [key, value] of Object.entries(props)) {
     converted[kebabCase(key)] = value;
@@ -12,17 +14,45 @@ export function handleMjmlProps<T extends Record<string, unknown>>(props: T): Ke
   return converted as KebabCasedProperties<T>;
 }
 
-export function createComponent<Props extends Record<string, unknown>>(Name: string): MjmlComponent<Props> {
+export function createComponent<Props extends Record<string, unknown>>(Name: string, endingTag: boolean) {
   const Component: MjmlComponent<Props> = ({ className, cssClass, children, ...rest }) => {
     let props = handleMjmlProps(rest);
+
     return (
-      // @ts-expect-error
-      <Name {...props} css-class={cssClass ?? className}>
-        {children}
-      </Name>
+      <MjmlComponentWrapper name={Name} endingTag={endingTag}>
+        {/**
+        // @ts-expect-error */}
+        <Name {...props} css-class={cx(className, cssClass)}>
+          {children}
+        </Name>
+      </MjmlComponentWrapper>
     );
   };
   Component.displayName = Name;
 
   return Component;
 }
+
+export const MjmlComponentWrapper: React.FC<{ name: string; endingTag?: boolean; children: React.ReactNode }> = ({
+  name,
+  endingTag = false,
+  children,
+}) => {
+  let { isInsideEndingTag, component } = useContext(EndingTagContext);
+  if (isInsideEndingTag) {
+    throw new Error(
+      `
+Rendering any mjml component inside another mjml component which is an ending tag is not supported.
+
+This error was thrown since \`${name}\` was rendered inside \`${component}\`.
+
+See https://documentation.mjml.io/#ending-tags for information about ending tags.`.trim(),
+    );
+  }
+
+  return (
+    <EndingTagContext.Provider value={{ isInsideEndingTag: endingTag, component: name }}>
+      {children}
+    </EndingTagContext.Provider>
+  );
+};
