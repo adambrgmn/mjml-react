@@ -8,7 +8,14 @@ import { MjmlComponent } from './types';
 export function handleMjmlProps<T extends Record<string, unknown>>(props: T) {
   let converted: Record<string, unknown> = {};
   for (let [key, value] of Object.entries(props)) {
-    converted[kebabCase(key)] = value;
+    switch (key) {
+      case 'fullWidth':
+        converted[kebabCase(key)] = value === true ? 'full-width' : value === false ? 'false' : undefined;
+        break;
+
+      default:
+        converted[kebabCase(key)] = value;
+    }
   }
 
   return converted;

@@ -10,6 +10,15 @@ import { PropsDocumentation, generatePropsDocumentation } from './generate-docs'
 // These components require special treatment and are overridden in src/overrides.tsx
 const ignored = ['mj-class', 'mj-all', 'mj-style', 'mj-raw'];
 
+/**
+ * These special props are just confusing when used a react context. Therefore they need some
+ * special treatment. The actual special case handling is done in `handleMjmlProps` in
+ * [`/src/create-component.tsx`](../src/create-component.tsx)
+ */
+const specialProps: Record<string, string> = {
+  'full-width': `fullWidth?: boolean;`,
+};
+
 (async () => {
   let sections: string[] = [];
 
@@ -58,12 +67,16 @@ function buildProps(attributes: Record<string, string>, docs: PropsDocumentation
   let rows: string[] = [];
 
   for (let [key, type] of Object.entries(attributes)) {
-    let [rawType] = type.split('(');
-
     if (key in docs) {
       rows.push(`/** ${docs[key].description} */`);
     }
 
+    if (key in specialProps) {
+      rows.push(specialProps[key]);
+      continue;
+    }
+
+    let [rawType] = type.split('(');
     switch (rawType) {
       case 'boolean':
         rows.push(`'${camelCase(key)}'?: boolean;`);

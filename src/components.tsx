@@ -424,7 +424,7 @@ export type MjSectionProps = {
   /** set the display order of direct children */
   direction?: 'ltr' | 'rtl';
   /** make the section full-width */
-  fullWidth?: 'full-width' | 'false' | '';
+  fullWidth?: boolean;
   /** supports up to 4 parameters */
   padding?: MjUnit<'px' | '%'>;
   /** section top offset */
@@ -606,7 +606,7 @@ export type MjWrapperProps = {
   borderTop?: string;
   direction?: 'ltr' | 'rtl';
   /** make the wrapper full-width */
-  fullWidth?: 'full-width' | 'false' | '';
+  fullWidth?: boolean;
   /** supports up to 4 parameters */
   padding?: MjUnit<'px' | '%'>;
   /** section top offset */

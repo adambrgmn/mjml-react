@@ -47,7 +47,7 @@ export const Austin: React.FC = () => {
       </Mjml.MjHead>
 
       <Mjml.MjBody backgroundColor="#E7E7E7" width="600px">
-        <Mjml.MjSection fullWidth="full-width" backgroundColor="#040B4F" paddingBottom="0">
+        <Mjml.MjSection fullWidth backgroundColor="#040B4F" paddingBottom="0">
           <Mjml.MjColumn>
             <Mjml.MjImage
               src="https://res.cloudinary.com/dheck1ubc/image/upload/v1544153577/Email/Images/AnnouncementOffset/crofts-white.png"
@@ -238,7 +238,7 @@ export const Austin: React.FC = () => {
           </Mjml.MjSection>
         </Mjml.MjWrapper>
 
-        <Mjml.MjWrapper fullWidth="full-width">
+        <Mjml.MjWrapper fullWidth>
           <Mjml.MjSection>
             <Mjml.MjColumn padding="0">
               <Mjml.MjSocial fontSize="15px" iconSize="30px" mode="horizontal" padding="0" align="center">
