@@ -1,9 +1,9 @@
-import { kebabCase } from 'lodash-es';
 import React, { useContext } from 'react';
 import { KebabCasedProperties } from 'type-fest';
 
 import { cx } from './cx';
 import { EndingTagContext } from './ending-tag-context';
+import { kebabCase } from './strings';
 import { MjmlComponent } from './types';
 
 export function handleMjmlProps<T extends Record<string, unknown>>(props: T) {

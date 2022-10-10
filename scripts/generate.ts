@@ -1,10 +1,10 @@
 import * as fs from 'node:fs';
 
-import { camelCase, upperFirst } from 'lodash-es';
 import 'mjml';
 import { components as mjmlComponents } from 'mjml-core';
 import prettier from 'prettier';
 
+import { camelCase, studlyCaps } from '../src/strings';
 import { PropsDocumentation, generatePropsDocumentation } from './generate-docs';
 
 // These components require special treatment and are overridden in src/overrides.tsx
@@ -28,7 +28,7 @@ import { MjUnit } from './types';
     if (component == null) continue;
 
     let props = buildProps((component as unknown as any).allowedAttributes ?? {}, docs[name]?.props ?? {});
-    let componentName = upperFirst(camelCase(name));
+    let componentName = studlyCaps(name);
     let endingTag = (component as unknown as any).endingTag ?? false;
 
     let comments = [
