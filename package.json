@@ -24,9 +24,6 @@
     "example": "node -r esbuild-register ./example/server.ts",
     "example:watch": "npx nodemon --watch example --exec 'npm run example' -e ts,tsx"
   },
-  "dependencies": {
-    "type-fest": "^2.18.0"
-  },
   "peerDependencies": {
     "mjml": "^4.13.0",
     "react": "^16.8.0 || ^17.0.0 || ^18.0.0",

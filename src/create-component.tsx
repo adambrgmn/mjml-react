@@ -1,5 +1,4 @@
 import React, { useContext } from 'react';
-import { KebabCasedProperties } from 'type-fest';
 
 import { cx } from './cx';
 import { EndingTagContext } from './ending-tag-context';
@@ -11,7 +10,8 @@ export function handleMjmlProps<T extends Record<string, unknown>>(props: T) {
   for (let [key, value] of Object.entries(props)) {
     converted[kebabCase(key)] = value;
   }
-  return converted as KebabCasedProperties<T>;
+
+  return converted;
 }
 
 export function createComponent<Props extends Record<string, unknown>>(Name: string, endingTag: boolean) {
