@@ -9,13 +9,13 @@ import { Receipt } from './Receipt';
 
 const baseUrl = new URL('http://localhost:3000');
 const templates = {
-  [Receipt.name.toLowerCase()]: createElement(Receipt),
-  [HappyNewYear.name.toLowerCase()]: createElement(HappyNewYear),
-  [Austin.name.toLowerCase()]: createElement(Austin),
+  receipt: createElement(Receipt),
+  'happy-new-year': createElement(HappyNewYear),
+  austin: createElement(Austin),
 } as const;
 
 const server = micro(async (req, res) => {
-  let template = ensureTemplate(params(req).get('template'), Austin.name.toLowerCase());
+  let template = ensureTemplate(params(req).get('template'), 'austin');
   let { html } = render(templates[template]);
 
   res.setHeader('Content-Type', 'text/html');
@@ -37,7 +37,7 @@ server.listen(Number(baseUrl.port), () => {
   console.log(urls);
 });
 
-type Template = keyof typeof templates & string;
+type Template = keyof typeof templates;
 function ensureTemplate(value: unknown, fallback: Template): Template {
   if (typeof value === 'string' && Object.keys(templates).includes(value)) {
     return value as Template;

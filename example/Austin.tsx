@@ -19,7 +19,7 @@ export const Austin: React.FC = () => {
           />
         </Mjml.MjAttributes>
         <Mjml.MjStyle
-          inline="inline"
+          inline
           css={Mjml.css`
             .body-section {
               -webkit-box-shadow: 1px 4px 11px 0px rgba(0, 0, 0, 0.15);
@@ -29,7 +29,7 @@ export const Austin: React.FC = () => {
           `}
         />
         <Mjml.MjStyle
-          inline="inline"
+          inline
           css={Mjml.css`
             .text-link {
               color: #5e6ebf;
@@ -37,7 +37,7 @@ export const Austin: React.FC = () => {
           `}
         />
         <Mjml.MjStyle
-          inline="inline"
+          inline
           css={Mjml.css`
             .footer-link {
               color: #888888;
@@ -45,9 +45,10 @@ export const Austin: React.FC = () => {
           `}
         />
       </Mjml.MjHead>
+
       <Mjml.MjBody backgroundColor="#E7E7E7" width="600px">
         <Mjml.MjSection fullWidth="full-width" backgroundColor="#040B4F" paddingBottom="0">
-          <Mjml.MjColumn width="100%">
+          <Mjml.MjColumn>
             <Mjml.MjImage
               src="https://res.cloudinary.com/dheck1ubc/image/upload/v1544153577/Email/Images/AnnouncementOffset/crofts-white.png"
               alt=""
@@ -90,8 +91,9 @@ export const Austin: React.FC = () => {
             />
           </Mjml.MjColumn>
         </Mjml.MjSection>
+
         <Mjml.MjSection backgroundColor="#1f2e78">
-          <Mjml.MjColumn width="100%">
+          <Mjml.MjColumn>
             <Mjml.MjImage
               src="https://res.cloudinary.com/dheck1ubc/image/upload/v1544156968/Email/Images/AnnouncementOffset/header-bottom.png"
               width="600px"
@@ -101,9 +103,10 @@ export const Austin: React.FC = () => {
             />
           </Mjml.MjColumn>
         </Mjml.MjSection>
+
         <Mjml.MjWrapper paddingTop="0" paddingBottom="0" className="body-section">
-          <Mjml.MjSection backgroundColor="#ffffff" paddingLeft="15px" paddingRight="15px">
-            <Mjml.MjColumn width="100%">
+          <Mjml.MjSection backgroundColor="#ffffff" padding="0 15px">
+            <Mjml.MjColumn>
               <Mjml.MjText color="#212b35" fontWeight="bold" fontSize="20px">
                 Croft's in Austin is opening December 20th
               </Mjml.MjText>
@@ -140,28 +143,8 @@ export const Austin: React.FC = () => {
                 adipisicing elit. Earum eaque sunt nulla in, id eveniet quae unde ad ipsam ut, harum autem porro
                 reiciendis minus libero illo. Vero, fugiat reprehenderit.
               </Mjml.MjText>
-              <Mjml.MjButton
-                backgroundColor="#5e6ebf"
-                align="center"
-                color="#ffffff"
-                fontSize="17px"
-                fontWeight="bold"
-                href="https://google.com"
-                width="300px"
-              >
-                RSVP Today
-              </Mjml.MjButton>
-              <Mjml.MjButton
-                backgroundColor="#5e6ebf"
-                align="center"
-                color="#ffffff"
-                fontSize="17px"
-                fontWeight="bold"
-                href="https://google.com"
-                width="300px"
-              >
-                Book an Appointment
-              </Mjml.MjButton>
+              <Button href="https://google.com">RSVP Today</Button>
+              <Button href="https://google.com">Book an Appointment</Button>
               <Mjml.MjText color="#637381" fontSize="16px" paddingTop="30px">
                 Lorem ipsum dolor{' '}
                 <a className="text-link" href="https://google.com">
@@ -175,15 +158,16 @@ export const Austin: React.FC = () => {
               </Mjml.MjText>
             </Mjml.MjColumn>
           </Mjml.MjSection>
+
           <Mjml.MjSection backgroundColor="#ffffff" paddingLeft="15px" paddingRight="15px" paddingTop="0">
-            <Mjml.MjColumn width="50%">
+            <Mjml.MjColumn>
               <Mjml.MjImage
                 align="center"
                 src="https://res.cloudinary.com/dheck1ubc/image/upload/v1544153577/Email/Images/AnnouncementOffset/Image_1.png"
                 alt=""
               />
             </Mjml.MjColumn>
-            <Mjml.MjColumn width="50%">
+            <Mjml.MjColumn>
               <Mjml.MjImage
                 align="center"
                 src="https://res.cloudinary.com/dheck1ubc/image/upload/v1544153578/Email/Images/AnnouncementOffset/Image_2.png"
@@ -191,13 +175,15 @@ export const Austin: React.FC = () => {
               />
             </Mjml.MjColumn>
           </Mjml.MjSection>
+
           <Mjml.MjSection backgroundColor="#ffffff" paddingLeft="15px" paddingRight="15px" paddingTop="0">
-            <Mjml.MjColumn width="100%">
+            <Mjml.MjColumn>
               <Mjml.MjDivider borderColor="#DFE3E8" borderWidth="1px" />
             </Mjml.MjColumn>
           </Mjml.MjSection>
+
           <Mjml.MjSection backgroundColor="#ffffff" padding="0 15px 0 15px">
-            <Mjml.MjColumn width="100%">
+            <Mjml.MjColumn>
               <Mjml.MjText color="#212b35" fontWeight="bold" fontSize="20px" paddingBottom="0">
                 Come see us!
               </Mjml.MjText>
@@ -206,8 +192,9 @@ export const Austin: React.FC = () => {
               </Mjml.MjText>
             </Mjml.MjColumn>
           </Mjml.MjSection>
+
           <Mjml.MjSection backgroundColor="#ffffff" paddingLeft="15px" paddingRight="15px">
-            <Mjml.MjColumn width="50%">
+            <Mjml.MjColumn>
               <Mjml.MjText
                 color="#212b35"
                 fontSize="12px"
@@ -215,7 +202,7 @@ export const Austin: React.FC = () => {
                 fontWeight="bold"
                 paddingBottom="0"
               >
-                address
+                Address
               </Mjml.MjText>
               <Mjml.MjText color="#637381" fontSize="14px" paddingTop="0">
                 Austin Convention Center
@@ -223,7 +210,7 @@ export const Austin: React.FC = () => {
                 123 Main Street, 78701
               </Mjml.MjText>
             </Mjml.MjColumn>
-            <Mjml.MjColumn width="50%">
+            <Mjml.MjColumn>
               <Mjml.MjText
                 color="#212b35"
                 fontSize="12px"
@@ -240,8 +227,9 @@ export const Austin: React.FC = () => {
               </Mjml.MjText>
             </Mjml.MjColumn>
           </Mjml.MjSection>
+
           <Mjml.MjSection backgroundColor="#ffffff" paddingLeft="15px" paddingRight="15px">
-            <Mjml.MjColumn width="100%">
+            <Mjml.MjColumn>
               <Mjml.MjImage
                 src="https://res.cloudinary.com/dheck1ubc/image/upload/v1544153579/Email/Images/AnnouncementOffset/map.jpg"
                 alt=""
@@ -252,7 +240,7 @@ export const Austin: React.FC = () => {
 
         <Mjml.MjWrapper fullWidth="full-width">
           <Mjml.MjSection>
-            <Mjml.MjColumn width="100%" padding="0">
+            <Mjml.MjColumn padding="0">
               <Mjml.MjSocial fontSize="15px" iconSize="30px" mode="horizontal" padding="0" align="center">
                 <Mjml.MjSocialElement name="facebook" href="https://Mjml.Mjml.io/" backgroundColor="#A1A0A0" />
                 <Mjml.MjSocialElement name="google" href="https://mjml.io/" backgroundColor="#A1A0A0" />
@@ -272,9 +260,10 @@ export const Austin: React.FC = () => {
               </Mjml.MjText>
             </Mjml.MjColumn>
           </Mjml.MjSection>
+
           <Mjml.MjSection paddingTop="0">
             <Mjml.MjGroup>
-              <Mjml.MjColumn width="100%" paddingRight="0">
+              <Mjml.MjColumn paddingRight="0">
                 <Mjml.MjText color="#445566" fontSize="11px" align="center" lineHeight="16px" fontWeight="bold">
                   <a className="footer-link" href="https://www.google.com">
                     Privacy
@@ -290,5 +279,21 @@ export const Austin: React.FC = () => {
         </Mjml.MjWrapper>
       </Mjml.MjBody>
     </Mjml.Mjml>
+  );
+};
+
+const Button: React.FC<{ href?: string; children: React.ReactNode }> = ({ href, children }) => {
+  return (
+    <Mjml.MjButton
+      backgroundColor="#5e6ebf"
+      align="center"
+      color="#ffffff"
+      fontSize="17px"
+      fontWeight="bold"
+      href={href}
+      width="300px"
+    >
+      {children}
+    </Mjml.MjButton>
   );
 };
