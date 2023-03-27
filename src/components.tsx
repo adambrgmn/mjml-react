@@ -296,7 +296,7 @@ export type MjDividerProps = {
   paddingTop?: MjUnit<'px' | '%'>;
   /** divider width */
   width?: MjUnit<'px' | '%'>;
-  /** alignment */
+  /** left/right/center */
   align?: 'left' | 'center' | 'right';
 };
 
